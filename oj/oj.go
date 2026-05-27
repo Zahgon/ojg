@@ -57,9 +57,8 @@ var (
 //
 // A chan argument will be used to deliver parse results.
 func Parse(b []byte, args ...any) (n any, err error) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	return p.Parse(b, args...)
+	_ = "STUB: not implemented"
+	return *new(any), nil
 }
 
 // MustParse JSON into a simple type. Arguments are optional and can be a bool,
@@ -74,104 +73,47 @@ func Parse(b []byte, args ...any) (n any, err error) {
 // only one JSON.
 //
 // A chan argument will be used to deliver parse results.
-func MustParse(b []byte, args ...any) (n any) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	var err error
-	if n, err = p.Parse(b, args...); err != nil {
-		panic(err)
-	}
-	return
-}
+func MustParse(b []byte, args ...any) (n any) { _ = "STUB: not implemented"; return *new(any) }
 
 // ParseString is similar to Parse except it takes a string
 // argument to be parsed instead of a []byte.
 func ParseString(s string, args ...any) (n any, err error) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	return p.Parse([]byte(s), args...)
+	_ = "STUB: not implemented"
+	return *new(any), nil
 }
 
 // MustParseString is similar to MustParse except it takes a string
 // argument to be parsed instead of a []byte.
-func MustParseString(s string, args ...any) (n any) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	var err error
-	if n, err = p.Parse([]byte(s), args...); err != nil {
-		panic(err)
-	}
-	return
-}
+func MustParseString(s string, args ...any) (n any) { _ = "STUB: not implemented"; return *new(any) }
 
 // Load a JSON from a io.Reader into a simple type. An error is returned
 // if not valid JSON.
-func Load(r io.Reader, args ...any) (any, error) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	return p.ParseReader(r, args...)
-}
+func Load(r io.Reader, args ...any) (any, error) { _ = "STUB: not implemented"; return *new(any), nil }
 
 // MustLoad a JSON from a io.Reader into a simple type. Panics on error.
-func MustLoad(r io.Reader, args ...any) (n any) {
-	p := parserPool.Get().(*Parser)
-	defer parserPool.Put(p)
-	var err error
-	if n, err = p.ParseReader(r, args...); err != nil {
-		panic(err)
-	}
-	return
-}
+func MustLoad(r io.Reader, args ...any) (n any) { _ = "STUB: not implemented"; return *new(any) }
 
 // Validate a JSON string. An error is returned if not valid JSON.
-func Validate(b []byte) error {
-	v := Validator{}
-	return v.Validate(b)
-}
+func Validate(b []byte) error { _ = "STUB: not implemented"; return nil }
 
 // ValidateString a JSON string. An error is returned if not valid JSON.
-func ValidateString(s string) error {
-	v := Validator{}
-	return v.Validate([]byte(s))
-}
+func ValidateString(s string) error { _ = "STUB: not implemented"; return nil }
 
 // ValidateReader a JSON stream. An error is returned if not valid JSON.
-func ValidateReader(r io.Reader) error {
-	v := Validator{}
-	return v.ValidateReader(r)
-}
+func ValidateReader(r io.Reader) error { _ = "STUB: not implemented"; return nil }
 
 // Unmarshal parses the provided JSON and stores the result in the value
 // pointed to by vp.
 func Unmarshal(data []byte, vp any, recomposer ...*alt.Recomposer) (err error) {
-	p := Parser{}
-	p.num.ForceFloat = true
-	var v any
-	if v, err = p.Parse(data); err == nil {
-		if 0 < len(recomposer) {
-			_, err = recomposer[0].Recompose(v, vp)
-		} else {
-			_, err = alt.Recompose(v, vp)
-		}
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // JSON returns a JSON string for the data provided. The data can be a
 // simple type of nil, bool, int, floats, time.Time, []any, or
 // map[string]any or a Node type, The args, if supplied can be an
 // int as an indent or a *Options.
-func JSON(data any, args ...any) string {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0], false)
-	}
-	if wr == nil {
-		wr, _ = writerPool.Get().(*Writer)
-		defer writerPool.Put(wr)
-	}
-	return wr.JSON(data)
-}
+func JSON(data any, args ...any) string { _ = "STUB: not implemented"; return "" }
 
 // Marshal returns a JSON string for the data provided. The data can be a
 // simple type of nil, bool, int, floats, time.Time, []any, or
@@ -180,80 +122,35 @@ func JSON(data any, args ...any) string {
 // the Option.Strict flag is true and a value is encountered that can not be
 // encoded other than by using the %v format of the fmt package.
 func Marshal(data any, args ...any) (out []byte, err error) {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0], true)
-	}
-	if wr == nil {
-		wr, _ = marshalPool.Get().(*Writer)
-		defer marshalPool.Put(wr)
-	} else {
-		wr.strict = true
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			wr.buf = wr.buf[:0]
-			err = ojg.NewError(r)
-		}
-	}()
-	wr.MustJSON(data)
-	out = make([]byte, len(wr.buf))
-	copy(out, wr.buf)
-
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Write a JSON string for the data provided. The data can be a simple type of
 // nil, bool, int, floats, time.Time, []any, or map[string]any
 // or a Node type, The args, if supplied can be an int as an indent or a
 // *Options.
-func Write(w io.Writer, data any, args ...any) (err error) {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0], false)
-	}
-	if wr == nil {
-		wr, _ = writerPool.Get().(*Writer)
-		defer writerPool.Put(wr)
-	}
-	return wr.Write(w, data)
-}
+func Write(w io.Writer, data any, args ...any) (err error) { _ = "STUB: not implemented"; return nil }
 
-func pickWriter(arg any, strict bool) (wr *Writer) {
-	switch ta := arg.(type) {
-	case int:
-		wr = &Writer{
-			Options: ojg.GoOptions,
-			buf:     make([]byte, 0, 1024),
-			strict:  strict,
-		}
-		wr.Indent = ta
-	case *ojg.Options:
-		wr = &Writer{
-			Options: *ta,
-			buf:     make([]byte, 0, 1024),
-			strict:  strict,
-		}
-	case *Writer:
-		wr = ta
-	}
-	return
-}
+func pickWriter(arg any, strict bool) (wr *Writer) { _ = "STUB: not implemented"; return nil }
 
 // Match parses a JSON document and calls onData when a data element that
 // matches the target path is encountered.
 func Match(data []byte, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return Tokenize(data, jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchString parses a JSON document and calls onData when a data element that
 // matches the target path is encountered.
 func MatchString(data string, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return Tokenize([]byte(data), jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchLoad parses a JSON document from an io.Reader and calls onData when a
 // data element that matches the target path is encountered.
 func MatchLoad(r io.Reader, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return TokenizeLoad(r, jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }

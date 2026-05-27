@@ -3,44 +3,29 @@
 package oj
 
 import (
-	"encoding"
 	"reflect"
-	"unsafe"
-
-	"github.com/ohler55/ojg"
 )
 
 func appendTextMarshaler(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Interface()
-	buf = append(buf, fi.jkey...)
-	if (*[2]uintptr)(unsafe.Pointer(&v))[1] == 0 { // real nil check
-		return buf, nil, aJustKey
-	}
-	return appendTextMarshalerVal(buf, v, safe)
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }
 
+// real nil check
+
 func appendTextMarshalerAddr(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Addr().Interface()
-	buf = append(buf, fi.jkey...)
-	return appendTextMarshalerVal(buf, v, safe)
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }
 
 func appendTextMarshalerNotEmpty(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Interface()
-	if (*[2]uintptr)(unsafe.Pointer(&v))[1] == 0 { // real nil check
-		return buf, nil, aSkip
-	}
-	buf = append(buf, fi.jkey...)
-	return appendTextMarshalerVal(buf, v, safe)
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }
 
-func appendTextMarshalerVal(buf []byte, v any, safe bool) ([]byte, any, appendStatus) {
-	m := v.(encoding.TextMarshaler)
-	j, err := m.MarshalText()
-	if err != nil {
-		panic(err)
-	}
-	buf = ojg.AppendJSONString(buf, string(j), safe)
+// real nil check
 
-	return buf, nil, aWrote
+func appendTextMarshalerVal(buf []byte, v any, safe bool) ([]byte, any, appendStatus) {
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }

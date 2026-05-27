@@ -2,12 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-
-	"github.com/ohler55/ojg/jp"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "set",
@@ -19,32 +13,4 @@ jp.SetOne() function.`,
 	})
 }
 
-func set(root map[string]any, at any, args ...any) any {
-	if len(args) != 2 {
-		panic(fmt.Errorf("set expects exactly two arguments. %d given", len(args)))
-	}
-	var x jp.Expr
-	switch v := args[0].(type) {
-	case jp.Expr:
-		x = v
-	case *Fn:
-		if x, _ = evalArg(root, at, v).(jp.Expr); x == nil {
-			panic(fmt.Errorf("the first argument to set must be a path not a %T", v))
-		}
-	default:
-		panic(fmt.Errorf("the first argument to set must be a path not a %T", v))
-	}
-	arg := evalArg(root, at, args[1])
-	var err error
-	if 0 < len(x) {
-		if _, ok := x[0].(jp.At); ok {
-			err = x.SetOne(at, arg)
-		} else {
-			err = x.SetOne(root, arg)
-		}
-	}
-	if err != nil {
-		panic(err)
-	}
-	return at
-}
+func set(root map[string]any, at any, args ...any) any { _ = "STUB: not implemented"; return *new(any) }

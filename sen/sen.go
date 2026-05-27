@@ -44,12 +44,7 @@ var (
 // only one SEN.
 //
 // A chan argument will be used to deliver parse results.
-func Parse(buf []byte, args ...any) (any, error) {
-	p, _ := parserPool.Get().(*Parser)
-	p.Reuse = false
-	defer parserPool.Put(p)
-	return p.Parse(buf, args...)
-}
+func Parse(buf []byte, args ...any) (any, error) { _ = "STUB: not implemented"; return *new(any), nil }
 
 // MustParse SEN into a simple type. Arguments are optional and can be a
 // func(any) bool for callbacks or a chan any for chan based
@@ -60,16 +55,7 @@ func Parse(buf []byte, args ...any) (any, error) {
 // only one SEN.
 //
 // A chan argument will be used to deliver parse results.
-func MustParse(buf []byte, args ...any) any {
-	p := parserPool.Get().(*Parser)
-	p.Reuse = false
-	defer parserPool.Put(p)
-	val, err := p.Parse(buf, args...)
-	if err != nil {
-		panic(err)
-	}
-	return val
-}
+func MustParse(buf []byte, args ...any) any { _ = "STUB: not implemented"; return *new(any) }
 
 // ParseReader reads and parses SEN into a simple type. Arguments are optional
 // and can be a func(any) bool for callbacks or a chan any for
@@ -81,10 +67,8 @@ func MustParse(buf []byte, args ...any) any {
 //
 // A chan argument will be used to deliver parse results.
 func ParseReader(r io.Reader, args ...any) (data any, err error) {
-	p, _ := parserPool.Get().(*Parser)
-	p.Reuse = false
-	defer parserPool.Put(p)
-	return p.ParseReader(r, args...)
+	_ = "STUB: not implemented"
+	return *new(any), nil
 }
 
 // MustParseReader reads and parses SEN into a simple type. Arguments are
@@ -98,46 +82,22 @@ func ParseReader(r io.Reader, args ...any) (data any, err error) {
 //
 // A chan argument will be used to deliver parse results.
 func MustParseReader(r io.Reader, args ...any) (data any) {
-	p := parserPool.Get().(*Parser)
-	p.Reuse = false
-	defer parserPool.Put(p)
-	var err error
-	if data, err = p.ParseReader(r, args...); err != nil {
-		panic(err)
-	}
-	return
+	_ = "STUB: not implemented"
+	return *new(any)
 }
 
 // Unmarshal parses the provided JSON and stores the result in the value
 // pointed to by vp.
 func Unmarshal(data []byte, vp any, recomposer ...*alt.Recomposer) (err error) {
-	p := Parser{}
-	var v any
-	if v, err = p.Parse(data); err == nil {
-		if 0 < len(recomposer) {
-			_, err = recomposer[0].Recompose(v, vp)
-		} else {
-			_, err = alt.Recompose(v, vp)
-		}
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // String returns a SEN string for the data provided. The data can be a simple
 // type of nil, bool, int, floats, time.Time, []any, or
 // map[string]any or a Node type, The args, if supplied can be an int
 // as an indent, *ojg.Options, or a *Writer.
-func String(data any, args ...any) string {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0])
-	}
-	if wr == nil {
-		wr, _ = writerPool.Get().(*Writer)
-		defer writerPool.Put(wr)
-	}
-	return wr.SEN(data)
-}
+func String(data any, args ...any) string { _ = "STUB: not implemented"; return "" }
 
 // Bytes returns a SEN []byte for the data provided. The data can be a simple
 // type of nil, bool, int, floats, time.Time, []any, or
@@ -145,77 +105,39 @@ func String(data any, args ...any) string {
 // as an indent, *ojg.Options, or a *Writer. The returned buffer is the Writer
 // buffer and is reused on the next call to write. If returned value is to be
 // preserved past a second invocation then the buffer should be copied.
-func Bytes(data any, args ...any) []byte {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0])
-	}
-	if wr == nil {
-		wr, _ = writerPool.Get().(*Writer)
-		defer writerPool.Put(wr)
-	}
-	return wr.MustSEN(data)
-}
+func Bytes(data any, args ...any) []byte { _ = "STUB: not implemented"; return nil }
 
 // Write SEN for the data provided. The data can be a simple type of nil,
 // bool, int, floats, time.Time, []any, or map[string]any or a
 // Node type, The args, if supplied can be an int as an indent, *ojg.Options,
 // or a *Writer.
-func Write(w io.Writer, data any, args ...any) (err error) {
-	var wr *Writer
-	if 0 < len(args) {
-		wr = pickWriter(args[0])
-	}
-	if wr == nil {
-		wr, _ = writerPool.Get().(*Writer)
-		defer writerPool.Put(wr)
-	}
-	return wr.Write(w, data)
-}
+func Write(w io.Writer, data any, args ...any) (err error) { _ = "STUB: not implemented"; return nil }
 
 // MustWrite SEN for the data provided. The data can be a simple type of nil,
 // bool, int, floats, time.Time, []any, or map[string]any or a
 // Node type, The args, if supplied can be an int as an indent, *ojg.Options,
 // or a *Writer. Panics on error.
-func MustWrite(w io.Writer, data any, args ...any) {
-	if err := Write(w, data, args...); err != nil {
-		panic(err)
-	}
-}
+func MustWrite(w io.Writer, data any, args ...any) { _ = "STUB: not implemented"; return }
 
-func pickWriter(arg any) (wr *Writer) {
-	switch ta := arg.(type) {
-	case int:
-		wr = &Writer{
-			Options: ojg.GoOptions,
-			buf:     make([]byte, 0, 1024),
-		}
-		wr.Indent = ta
-	case *ojg.Options:
-		wr = &Writer{
-			Options: *ta,
-			buf:     make([]byte, 0, 1024),
-		}
-	case *Writer:
-		wr = ta
-	}
-	return
-}
+func pickWriter(arg any) (wr *Writer) { _ = "STUB: not implemented"; return nil }
 
 // Match parses a SEN document and calls onData when a data element that
 // matches the target path is encountered.
 func Match(data []byte, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return Tokenize(data, jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchString parses a JSON document and calls onData when a data element that
 // matches the target path is encountered.
 func MatchString(data string, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return Tokenize([]byte(data), jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchLoad parses a JSON document from an io.Reader and calls onData when a
 // data element that matches the target path is encountered.
 func MatchLoad(r io.Reader, onData func(path jp.Expr, data any), targets ...jp.Expr) error {
-	return TokenizeLoad(r, jp.NewMatchHandler(onData, targets...))
+	_ = "STUB: not implemented"
+	return nil
 }

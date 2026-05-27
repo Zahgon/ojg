@@ -3,7 +3,6 @@
 package ojg
 
 import (
-	"math"
 	"strconv"
 	"time"
 )
@@ -109,102 +108,14 @@ var (
 // the value is a map or slice and not converted itself the provided value
 // will remain the same but will be modified if any of it's members are
 // converted.
-func (c *Converter) Convert(v any) any {
-	v, _ = c.convert(v)
-	return v
-}
+func (c *Converter) Convert(v any) any { _ = "STUB: not implemented"; return *new(any) }
 
-func (c *Converter) convert(v any) (any, bool) {
-	switch tv := v.(type) {
-	case int64:
-		for _, fun := range c.Int {
-			if cv, ok := fun(tv); ok {
-				return cv, true
-			}
-		}
-	case float64:
-		for _, fun := range c.Float {
-			if cv, ok := fun(tv); ok {
-				return cv, true
-			}
-		}
-	case string:
-		for _, fun := range c.String {
-			if cv, ok := fun(tv); ok {
-				return cv, true
-			}
-		}
-	case []any:
-		for _, fun := range c.Array {
-			if cv, ok := fun(tv); ok {
-				return cv, true
-			}
-		}
-		for i, m := range tv {
-			if cv, ok := c.convert(m); ok {
-				tv[i] = cv
-			}
-		}
-	case map[string]any:
-		for _, fun := range c.Map {
-			if cv, ok := fun(tv); ok {
-				return cv, true
-			}
-		}
-		for k, m := range tv {
-			if cv, ok := c.convert(m); ok {
-				tv[k] = cv
-			}
-		}
+func (c *Converter) convert(v any) (any, bool) { _ = "STUB: not implemented"; return *new(any), false }
 
-	case int:
-		return c.convert(int64(tv))
-	case int8:
-		return c.convert(int64(tv))
-	case int16:
-		return c.convert(int64(tv))
-	case int32:
-		return c.convert(int64(tv))
-	case uint:
-		return c.convert(int64(tv))
-	case uint8:
-		return c.convert(int64(tv))
-	case uint16:
-		return c.convert(int64(tv))
-	case uint32:
-		return c.convert(int64(tv))
-	case uint64:
-		return c.convert(int64(tv))
-	case float32:
-		// This small rounding makes the conversion from 32 bit to 64 bit
-		// display nicer.
-		f, i := math.Frexp(float64(tv))
-		f = float64(int64(f*fracMax)) / fracMax
-		return c.convert(math.Ldexp(f, i))
-	}
-	return v, false
-}
+// This small rounding makes the conversion from 32 bit to 64 bit
+// display nicer.
 
 // Convert a value according to the conversion functions provided. If the
 // value is a map or slice and not converted itself the provided value will
 // remain the same but will be modified if any of it's members are converted.
-func Convert(v any, funcs ...any) any {
-	c := Converter{}
-	for _, fun := range funcs {
-		switch tf := fun.(type) {
-		case func(val int64) (any, bool):
-			c.Int = append(c.Int, tf)
-		case func(val float64) (any, bool):
-			c.Float = append(c.Float, tf)
-		case func(val string) (any, bool):
-			c.String = append(c.String, tf)
-		case func(val map[string]any) (any, bool):
-			c.Map = append(c.Map, tf)
-		case func(val []any) (any, bool):
-			c.Array = append(c.Array, tf)
-		}
-	}
-	v, _ = c.convert(v)
-
-	return v
-}
+func Convert(v any, funcs ...any) any { _ = "STUB: not implemented"; return *new(any) }

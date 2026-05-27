@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"time"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "equal",
@@ -28,125 +24,12 @@ and equal.`,
 }
 
 func equal(root map[string]any, at any, args ...any) any {
-	if 0 < len(args) {
-		v0 := evalArg(root, at, args[0])
-		for _, v := range args[1:] {
-			v = evalArg(root, at, v)
-			if !equalVals(v0, v) {
-				return false
-			}
-		}
-	}
-	return true
+	_ = "STUB: not implemented"
+	return *new(any)
 }
 
-func equalVals(v0, v1 any) (eq bool) {
-	switch t0 := v0.(type) {
-	case nil:
-		eq = nil == v1
-	case bool:
-		if b1, ok := v1.(bool); ok {
-			eq = b1 == t0
-		}
-	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
-		x, _ := asInt(v0)
-		a, ok := asInt(v1)
-		if ok {
-			eq = x == a
-		} else if f, ok2 := asFloat(v1); ok2 {
-			eq = float64(x) == f
-		}
-	case float32, float64:
-		x, _ := asFloat(v0)
-		a, ok := asFloat(v1)
-		eq = ok && x == a
-	case string:
-		a, ok := v1.(string)
-		eq = v0 == a && ok
-	case time.Time:
-		tm, _ := v1.(time.Time)
-		eq = tm.Equal(t0)
-	case []any:
-		if t1, ok := v1.([]any); ok && len(t0) == len(t1) {
-			eq = true
-			for i, m0 := range t0 {
-				if eq = equalVals(m0, t1[i]); !eq {
-					break
-				}
-			}
-		}
-	case map[string]any:
-		if t1, ok := v1.(map[string]any); ok && len(t0) == len(t1) {
-			eq = true
-			for k, m0 := range t0 {
-				m1, has := t1[k]
-				if eq = has && equalVals(m0, m1); !eq {
-					break
-				}
-			}
-		}
-	}
-	return
-}
+func equalVals(v0, v1 any) (eq bool) { _ = "STUB: not implemented"; return false }
 
-func asInt(v any) (i int64, ok bool) {
-	ok = true
-	switch tv := v.(type) {
-	case int:
-		i = int64(tv)
-	case int8:
-		i = int64(tv)
-	case int16:
-		i = int64(tv)
-	case int32:
-		i = int64(tv)
-	case int64:
-		i = tv
-	case uint:
-		i = int64(tv)
-	case uint8:
-		i = int64(tv)
-	case uint16:
-		i = int64(tv)
-	case uint32:
-		i = int64(tv)
-	case uint64:
-		i = int64(tv)
-	default:
-		ok = false
-	}
-	return
-}
+func asInt(v any) (i int64, ok bool) { _ = "STUB: not implemented"; return 0, false }
 
-func asFloat(v any) (f float64, ok bool) {
-	ok = true
-	switch tv := v.(type) {
-	case float32:
-		f = float64(tv)
-	case float64:
-		f = tv
-	case int:
-		f = float64(tv)
-	case int8:
-		f = float64(tv)
-	case int16:
-		f = float64(tv)
-	case int32:
-		f = float64(tv)
-	case int64:
-		f = float64(tv)
-	case uint:
-		f = float64(tv)
-	case uint8:
-		f = float64(tv)
-	case uint16:
-		f = float64(tv)
-	case uint32:
-		f = float64(tv)
-	case uint64:
-		f = float64(tv)
-	default:
-		ok = false
-	}
-	return
-}
+func asFloat(v any) (f float64, ok bool) { _ = "STUB: not implemented"; return 0, false }

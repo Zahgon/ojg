@@ -10,46 +10,75 @@ type ZeroHandler struct {
 
 // Null is called when a JSON null is encountered.
 func (z *ZeroHandler) Null() {
+	_ = "STUB: not implemented"
+
+	// Bool is called when a JSON true or false is encountered.
+	return
 }
 
-// Bool is called when a JSON true or false is encountered.
 func (z *ZeroHandler) Bool(bool) {
+	_ = "STUB: not implemented"
+
+	// Int is called when a JSON integer is encountered.
+	return
 }
 
-// Int is called when a JSON integer is encountered.
 func (z *ZeroHandler) Int(int64) {
+	_ = "STUB: not implemented"
+
+	// Float is called when a JSON decimal is encountered that fits into a
+	// float64.
+	return
 }
 
-// Float is called when a JSON decimal is encountered that fits into a
-// float64.
 func (z *ZeroHandler) Float(float64) {
+	_ = "STUB: not implemented"
+
+	// Number is called when a JSON number is encountered that does not fit
+	// into an int64 or float64.
+	return
 }
 
-// Number is called when a JSON number is encountered that does not fit
-// into an int64 or float64.
 func (z *ZeroHandler) Number(string) {
+	_ = "STUB: not implemented"
+
+	// String is called when a JSON string is encountered.
+	return
 }
 
-// String is called when a JSON string is encountered.
 func (z *ZeroHandler) String(string) {
+	_ = "STUB: not implemented"
+
+	// ObjectStart is called when a JSON object start '{' is encountered.
+	return
 }
 
-// ObjectStart is called when a JSON object start '{' is encountered.
 func (z *ZeroHandler) ObjectStart() {
+	_ = "STUB: not implemented"
+
+	// ObjectEnd is called when a JSON object end '}' is encountered.
+	return
 }
 
-// ObjectEnd is called when a JSON object end '}' is encountered.
 func (z *ZeroHandler) ObjectEnd() {
+	_ = "STUB: not implemented"
+
+	// Key is called when a JSON object key is encountered.
+	return
 }
 
-// Key is called when a JSON object key is encountered.
 func (z *ZeroHandler) Key(string) {
+	_ = "STUB: not implemented"
+
+	// ArrayStart is called when a JSON array start '[' is encountered.
+	return
 }
 
-// ArrayStart is called when a JSON array start '[' is encountered.
 func (z *ZeroHandler) ArrayStart() {
+	_ = "STUB: not implemented"
+
+	// ArrayEnd is called when a JSON array end ']' is encountered.
+	return
 }
 
-// ArrayEnd is called when a JSON array end ']' is encountered.
-func (z *ZeroHandler) ArrayEnd() {
-}
+func (z *ZeroHandler) ArrayEnd() { _ = "STUB: not implemented"; return }

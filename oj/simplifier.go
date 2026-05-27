@@ -4,35 +4,21 @@ package oj
 
 import (
 	"reflect"
-	"unsafe"
-
-	"github.com/ohler55/ojg/alt"
 )
 
 func appendSimplifier(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Interface()
-	buf = append(buf, fi.jkey...)
-	if (*[2]uintptr)(unsafe.Pointer(&v))[1] == 0 {
-		return buf, nil, aChanged
-	}
-	return buf, v.(alt.Simplifier).Simplify(), aChanged
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }
 
 func appendSimplifierNotEmpty(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Interface()
-	if (*[2]uintptr)(unsafe.Pointer(&v))[1] == 0 { // real nil check
-		return buf, nil, aSkip
-	}
-	buf = append(buf, fi.jkey...)
-	if s, ok := v.(alt.Simplifier); ok {
-		v = s.Simplify()
-	}
-	return buf, v, aChanged
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }
 
-func appendSimplifierAddr(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
-	v := rv.FieldByIndex(fi.index).Addr().Interface()
-	buf = append(buf, fi.jkey...)
+// real nil check
 
-	return buf, v.(alt.Simplifier).Simplify(), aChanged
+func appendSimplifierAddr(fi *finfo, buf []byte, rv reflect.Value, addr uintptr, safe bool) ([]byte, any, appendStatus) {
+	_ = "STUB: not implemented"
+	return nil, *new(any), *new(appendStatus)
 }

@@ -12,31 +12,28 @@ var True = Bool(true)
 var False = Bool(false)
 
 // String returns a string representation of the Node.
-func (n Bool) String() (s string) {
-	if n {
-		s = "true"
-	} else {
-		s = "false"
-	}
-	return
-}
+func (n Bool) String() (s string) { _ = "STUB: not implemented"; return "" }
 
 // Alter returns the backing boolean value of the Node.
 func (n Bool) Alter() any {
-	return bool(n)
+	_ = "STUB: not implemented"
+
+	// Simplify returns the backing boolean value.
+	return *new(any)
 }
 
-// Simplify returns the backing boolean value.
 func (n Bool) Simplify() any {
-	return bool(n)
+	_ = "STUB: not implemented"
+
+	// Dup returns itself.
+	return *new(any)
 }
 
-// Dup returns itself.
 func (n Bool) Dup() Node {
-	return n
+	_ = "STUB: not implemented"
+
+	// Empty returns false.
+	return *new(Node)
 }
 
-// Empty returns false.
-func (n Bool) Empty() bool {
-	return false
-}
+func (n Bool) Empty() bool { _ = "STUB: not implemented"; return false }

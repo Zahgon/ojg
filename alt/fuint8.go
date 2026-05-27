@@ -4,8 +4,6 @@ package alt
 
 import (
 	"reflect"
-	"strconv"
-	"unsafe"
 )
 
 var uint8ValFuncs = [8]valFunc{
@@ -20,43 +18,41 @@ var uint8ValFuncs = [8]valFunc{
 }
 
 func valUint8(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return *(*uint8)(unsafe.Pointer(addr + fi.offset)), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valUint8AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatUint(uint64(*(*uint8)(unsafe.Pointer(addr + fi.offset))), 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valUint8NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*uint8)(unsafe.Pointer(addr + fi.offset))
-	return v, nilValue, v == 0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valUint8NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*uint8)(unsafe.Pointer(addr + fi.offset))
-	if v == 0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatUint(uint64(v), 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalUint8(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return rv.FieldByIndex(fi.index).Uint(), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalUint8AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatUint(rv.FieldByIndex(fi.index).Uint(), 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalUint8NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Uint()
-	return v, nilValue, v == 0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalUint8NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Uint()
-	if v == 0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatUint(v, 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }

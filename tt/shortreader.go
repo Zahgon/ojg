@@ -2,8 +2,6 @@
 
 package tt
 
-import "fmt"
-
 // ShortReader readons only the designated amount and then returns an
 // error.
 type ShortReader struct {
@@ -13,11 +11,4 @@ type ShortReader struct {
 }
 
 // Read the next batch of bytes.
-func (r *ShortReader) Read(p []byte) (n int, err error) {
-	start := r.pos
-	r.pos += len(p)
-	if r.Max < r.pos {
-		return 0, fmt.Errorf("fail now")
-	}
-	return copy(p, r.Content[start:]), nil
-}
+func (r *ShortReader) Read(p []byte) (n int, err error) { _ = "STUB: not implemented"; return 0, nil }

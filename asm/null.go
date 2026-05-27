@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "null?",
@@ -22,8 +18,6 @@ or nil (golang) otherwise false is returned.`,
 }
 
 func null(root map[string]any, at any, args ...any) any {
-	if len(args) != 1 {
-		panic(fmt.Errorf("null? / nil? expects exactly one arguments. %d given", len(args)))
-	}
-	return evalArg(root, at, args[0]) == nil
+	_ = "STUB: not implemented"
+	return *new(any)
 }

@@ -8,19 +8,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"sort"
-	"strconv"
-	"strings"
-	"time"
 
 	"github.com/ohler55/ojg"
 	"github.com/ohler55/ojg/alt"
 	"github.com/ohler55/ojg/asm"
-	"github.com/ohler55/ojg/discover"
 	"github.com/ohler55/ojg/jp"
-	"github.com/ohler55/ojg/oj"
-	"github.com/ohler55/ojg/pretty"
-	"github.com/ohler55/ojg/sen"
 )
 
 var version = "unknown"
@@ -182,816 +174,82 @@ the discovered document according to the -lazy flag.
 	}
 }
 
-func run() (err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err, _ = r.(error)
-		}
-	}()
-	loadConfig()
+func run() (err error) { _ = "STUB: not implemented"; return nil }
 
-	flag.Parse() // load again to over-ride loaded config
+// load again to over-ride loaded config
 
-	var input []byte
-	var files []string
-	for _, arg := range flag.Args() {
-		if len(arg) == 0 {
-			continue
-		}
-		if 0 < len(input) {
-			input = append(input, arg...)
-			continue
-		}
-		switch arg[0] {
-		case '@', '$':
-			x, err := jp.ParseString(arg)
-			if err == nil {
-				extracts = append(extracts, x)
-			}
-		case '(':
-			script, err := jp.NewScript(arg)
-			if err == nil {
-				matches = append(matches, script)
-			}
-		case '{', '[':
-			input = append(input, arg...)
-		default:
-			files = append(files, arg)
-		}
-	}
-	if 0 < len(convName) {
-		switch strings.ToLower(convName) {
-		case "nano":
-			conv = &alt.TimeNanoConverter
-		case "rfc3339":
-			conv = &alt.TimeRFC3339Converter
-		case "mongo":
-			conv = &alt.MongoConverter
-		default:
-			if strings.ContainsAny(convName, "0123456789") {
-				conv = &alt.Converter{
-					String: []func(val string) (any, bool){
-						func(val string) (any, bool) {
-							if len(val) == len(convName) {
-								if t, err := time.ParseInLocation(convName, val, time.UTC); err == nil {
-									return t, true
-								}
-							}
-							return val, false
-						},
-					},
-				}
-			} else {
-				conv = &alt.Converter{
-					Map: []func(val map[string]any) (any, bool){
-						func(val map[string]any) (any, bool) {
-							if len(val) == 1 {
-								switch tv := val[convName].(type) {
-								case string:
-									for _, layout := range []string{time.RFC3339Nano, time.RFC3339, "2006-01-02"} {
-										if t, err := time.ParseInLocation(layout, tv, time.UTC); err == nil {
-											return t, true
-										}
-									}
-								case int64:
-									return time.Unix(0, tv), true
-								}
-							}
-							return val, false
-						},
-					},
-				}
-			}
-		}
-	}
-	var p oj.SimpleParser
-	switch {
-	case mongo:
-		sp := &sen.Parser{}
-		sp.AddMongoFuncs()
-		p = sp
-		if conv == nil {
-			conv = &alt.MongoConverter
-		}
-	case lazy:
-		p = &sen.Parser{}
-	default:
-		p = &oj.Parser{Reuse: true}
-	}
-	planDef = strings.TrimSpace(planDef)
-	if 0 < len(planDef) {
-		if planDef[0] != '[' {
-			var b []byte
-			if b, err = os.ReadFile(planDef); err != nil {
-				return err
-			}
-			planDef = string(b)
-		}
-		var pd any
-		if pd, err = (&sen.Parser{}).Parse([]byte(planDef)); err != nil {
-			panic(err)
-		}
-		plist, _ := pd.([]any)
-		if len(plist) == 0 {
-			panic(fmt.Errorf("assembly plan not an array"))
-		}
-		plan = asm.NewPlan(plist)
-	}
-	if 0 < len(files) {
-		var f *os.File
-		for _, file := range files {
-			if f, err = os.Open(file); err == nil {
-				switch {
-				case dig:
-					err = digParse(f)
-				case discovery:
-					if lazy {
-						discover.ReadSEN(f, write)
-					} else {
-						discover.ReadJSON(f, write)
-					}
-				default:
-					_, err = p.ParseReader(f, write)
-				}
-				_ = f.Close()
-			}
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
-	if 0 < len(input) {
-		if discovery {
-			if lazy {
-				discover.SEN(input, write)
-			} else {
-				discover.JSON(input, write)
-			}
-		} else if _, err = p.Parse(input, write); err != nil {
-			panic(err)
-		}
-	}
-	if len(files) == 0 && len(input) == 0 {
-		switch {
-		case dig:
-			err = digParse(os.Stdin)
-		case discovery:
-			if lazy {
-				discover.ReadSEN(os.Stdin, write)
-			} else {
-				discover.ReadJSON(os.Stdin, write)
-			}
-		default:
-			_, err = p.ParseReader(os.Stdin, write)
-		}
-		if err != nil {
-			panic(err)
-		}
-	}
-	if showRoot && plan != nil {
-		plan = nil
-		delete(root, "src")
-		delete(root, "asm")
-		write(root)
-	}
-	return
-}
+func digParse(r io.Reader) error { _ = "STUB: not implemented"; return nil }
 
-func digParse(r io.Reader) error {
-	var fn func(path jp.Expr, data any)
-	annotateColor := ""
+// Pick a function that satisfies omit, annotate, and senOut
+// values. Determining the function before the actual calling means few
+// conditional paths during the repeated calls later.
 
-	if color {
-		annotateColor = ojg.Gray
-	}
-	// Pick a function that satisfies omit, annotate, and senOut
-	// values. Determining the function before the actual calling means few
-	// conditional paths during the repeated calls later.
-	if omit {
-		if annotate {
-			if senOut {
-				fn = func(path jp.Expr, data any) {
-					if data != nil && data != "" {
-						fmt.Printf("%s// %s\n", annotateColor, path)
-						writeSEN(data)
-					}
-				}
-			} else {
-				fn = func(path jp.Expr, data any) {
-					if data != nil && data != "" {
-						fmt.Printf("%s// %s\n", annotateColor, path)
-						writeJSON(data)
-					}
-				}
-			}
-		} else {
-			if senOut {
-				fn = func(path jp.Expr, data any) {
-					if data != nil && data != "" {
-						writeSEN(data)
-					}
-				}
-			} else {
-				fn = func(path jp.Expr, data any) {
-					if data != nil && data != "" {
-						writeJSON(data)
-					}
-				}
-			}
-		}
-	} else {
-		if annotate {
-			if senOut {
-				fn = func(path jp.Expr, data any) {
-					fmt.Printf("%s// %s\n", annotateColor, path)
-					writeSEN(data)
-				}
-			} else {
-				fn = func(path jp.Expr, data any) {
-					fmt.Printf("%s// %s\n", annotateColor, path)
-					writeJSON(data)
-				}
-			}
-		} else {
-			if senOut {
-				fn = func(path jp.Expr, data any) {
-					writeSEN(data)
-				}
-			} else {
-				fn = func(path jp.Expr, data any) {
-					writeJSON(data)
-				}
-			}
-		}
-	}
-	if lazy {
-		return sen.MatchLoad(r, fn, extracts...)
-	}
-	return oj.MatchLoad(r, fn, extracts...)
-}
+func write(v any) bool { _ = "STUB: not implemented"; return false }
 
-func write(v any) bool {
-	if conv != nil {
-		v = conv.Convert(v)
-	}
-	if 0 < len(matches) {
-		match := false
-		for _, m := range matches {
-			if m.Match(v) {
-				match = true
-				break
-			}
-		}
-		if !match {
-			return false
-		}
-	}
-	for _, x := range dels {
-		_ = x.Del(v)
-	}
-	switch {
-	case 0 < len(extracts):
-		if wrapExtract {
-			var w []any
-			for _, x := range extracts {
-				w = append(w, x.Get(v)...)
-			}
-			if senOut {
-				writeSEN(w)
-			} else {
-				writeJSON(w)
-			}
-		} else {
-			for _, x := range extracts {
-				for _, v2 := range x.Get(v) {
-					if senOut {
-						writeSEN(v2)
-					} else {
-						writeJSON(v2)
-					}
-				}
-			}
-		}
-	case senOut:
-		writeSEN(v)
-	default:
-		if plan != nil {
-			root["src"] = v
-			if err := plan.Execute(root); err != nil {
-				fmt.Fprintf(os.Stderr, "*-*-* %s\n", err)
-				os.Exit(1)
-			} else {
-				v = root["asm"]
-			}
-		}
-		writeJSON(v)
-	}
-	return false
-}
+func writeJSON(v any) { _ = "STUB: not implemented"; return }
 
-func writeJSON(v any) {
-	if options == nil {
-		o := ojg.Options{}
-		if bright {
-			o = oj.BrightOptions
-			o.Color = true
-			o.Sort = sortKeys
-		} else if color || sortKeys || tab {
-			o = ojg.DefaultOptions
-			o.Color = color
-		}
-		o.Indent = indent
-		o.Tab = tab
-		o.HTMLUnsafe = !safe
-		o.TimeFormat = time.RFC3339Nano
-		o.Sort = sortKeys
-		if html {
-			o.HTMLUnsafe = false
-			if color {
-				o.SyntaxColor = ojg.HTMLOptions.SyntaxColor
-				o.KeyColor = ojg.HTMLOptions.KeyColor
-				o.NullColor = ojg.HTMLOptions.NullColor
-				o.BoolColor = ojg.HTMLOptions.BoolColor
-				o.NumberColor = ojg.HTMLOptions.NumberColor
-				o.StringColor = ojg.HTMLOptions.StringColor
-				o.TimeColor = ojg.HTMLOptions.TimeColor
-				o.NoColor = ojg.HTMLOptions.NoColor
-			}
-		}
-		options = &o
-	}
-	if omit {
-		// Use alt.Alter to remove empty since it handles recursive removal.
-		v = alt.Alter(v, &ojg.Options{OmitNil: true, OmitEmpty: true})
-	}
-	if 0 < len(prettyOpt) {
-		parsePrettyOpt()
-	}
-	if prettyOn {
-		_ = pretty.WriteJSON(os.Stdout, v, options, float64(width)+float64(maxDepth)/10.0, align)
-	} else {
-		_ = oj.Write(os.Stdout, v, options)
-	}
-	_, _ = os.Stdout.Write([]byte{'\n'})
-}
+// Use alt.Alter to remove empty since it handles recursive removal.
 
-func writeSEN(v any) {
-	if options == nil {
-		o := ojg.Options{}
-		switch {
-		case html:
-			o = ojg.HTMLOptions
-			o.Color = true
-			o.HTMLUnsafe = false
-		case bright:
-			o = ojg.BrightOptions
-			o.Color = true
-		case color || sortKeys || tab:
-			o = ojg.DefaultOptions
-			o.Color = color
-		}
-		o.Indent = indent
-		o.Tab = tab
-		o.HTMLUnsafe = !safe
-		o.TimeFormat = time.RFC3339Nano
-		o.Sort = sortKeys
-		options = &o
-	}
-	if omit {
-		// Use alt.Alter to remove empty since it handles recursive removal.
-		v = alt.Alter(v, &ojg.Options{OmitNil: true, OmitEmpty: true})
-	}
-	if 0 < len(prettyOpt) {
-		parsePrettyOpt()
-	}
-	if prettyOn {
-		_ = pretty.WriteSEN(os.Stdout, v, options, float64(width)+float64(maxDepth)/10.0, align)
-	} else {
-		_ = sen.Write(os.Stdout, v, options)
-	}
-	_, _ = os.Stdout.Write([]byte{'\n'})
-}
+func writeSEN(v any) { _ = "STUB: not implemented"; return }
 
-func parsePrettyOpt() {
-	if 0 < len(prettyOpt) {
-		parts := strings.Split(prettyOpt, ".")
-		if 0 < len(parts[0]) {
-			if i, err := strconv.ParseInt(parts[0], 10, 64); err == nil {
-				width = int(i)
-				prettyOn = true
-			} else {
-				panic(err)
-			}
-		}
-		if 1 < len(parts) && 0 < len(parts[1]) {
-			if i, err := strconv.ParseInt(parts[1], 10, 64); err == nil {
-				maxDepth = int(i)
-				prettyOn = true
-			} else {
-				panic(err)
-			}
-		}
-		if 2 < len(parts) && 0 < len(parts[2]) {
-			var err error
-			if align, err = strconv.ParseBool(parts[2]); err != nil {
-				panic(err)
-			}
-			prettyOn = true
-		}
-	}
-}
+// Use alt.Alter to remove empty since it handles recursive removal.
+
+func parsePrettyOpt() { _ = "STUB: not implemented"; return }
 
 type exValue struct {
 }
 
-func (xv exValue) String() string {
-	return ""
-}
+func (xv exValue) String() string { _ = "STUB: not implemented"; return "" }
 
-func (xv exValue) Set(s string) error {
-	x, err := jp.ParseString(s)
-	if err == nil {
-		extracts = append(extracts, x)
-	}
-	return err
-}
+func (xv exValue) Set(s string) error { _ = "STUB: not implemented"; return nil }
 
 type matchValue struct {
 }
 
-func (mv matchValue) String() string {
-	return ""
-}
+func (mv matchValue) String() string { _ = "STUB: not implemented"; return "" }
 
-func (mv matchValue) Set(s string) error {
-	script, err := jp.NewScript(s)
-	if err == nil {
-		matches = append(matches, script)
-	}
-	return err
-}
+func (mv matchValue) Set(s string) error { _ = "STUB: not implemented"; return nil }
 
 type delValue struct {
 }
 
-func (dv delValue) String() string {
-	return ""
-}
+func (dv delValue) String() string { _ = "STUB: not implemented"; return "" }
 
-func (dv delValue) Set(s string) error {
-	x, err := jp.ParseString(s)
-	if err == nil {
-		dels = append(dels, x)
-	}
-	return err
-}
+func (dv delValue) Set(s string) error { _ = "STUB: not implemented"; return nil }
 
-func loadConfig() {
-	var conf any
-	if 0 < len(confFile) {
-		if confFile == "-" { // special case
-			return
-		}
-		f, err := os.Open(confFile)
-		if err != nil {
-			panic(err)
-		}
-		if conf, err = sen.ParseReader(f); err != nil {
-			panic(err)
-		}
-		applyConf(conf)
-	}
-	home := os.Getenv("HOME")
-	for _, path := range []string{
-		"./.oj-config.sen",
-		"./.oj-config.json",
-		home + "/.oj-config.sen",
-		home + "/.oj-config.json",
-	} {
-		f, err := os.Open(path)
-		if err == nil {
-			if conf, err = sen.ParseReader(f); err == nil {
-				applyConf(conf)
-				return
-			}
-		}
-	}
-}
+func loadConfig() { _ = "STUB: not implemented"; return }
 
-func applyConf(conf any) {
-	bright, _ = jp.C("bright").First(conf).(bool)
-	color, _ = jp.C("color").First(conf).(bool)
-	for _, v := range jp.C("format").C("indent").Get(conf) {
-		indent = int(alt.Int(v))
-	}
-	for _, v := range jp.C("format").C("tab").Get(conf) {
-		tab = alt.Bool(v)
-	}
-	for _, v := range jp.C("format").C("pretty").Get(conf) {
-		prettyOpt, _ = v.(string)
-		parsePrettyOpt()
-	}
-	for _, v := range jp.C("format").C("width").Get(conf) {
-		width = int(alt.Int(v))
-		prettyOn = true
-	}
-	for _, v := range jp.C("format").C("depth").Get(conf) {
-		maxDepth = int(alt.Int(v))
-		prettyOn = true
-	}
-	for _, v := range jp.C("format").C("align").Get(conf) {
-		align = alt.Bool(v)
-		prettyOn = true
-	}
-	safe, _ = jp.C("html-safe").First(conf).(bool)
-	lazy, _ = jp.C("lazy").First(conf).(bool)
-	discovery, _ = jp.C("discover").First(conf).(bool)
-	senOut, _ = jp.C("sen").First(conf).(bool)
-	convName, _ = jp.C("conv").First(conf).(string)
-	mongo, _ = jp.C("mongo").First(conf).(bool)
+// special case
 
-	setOptionsColor(conf, "bool", setBoolColor)
-	setOptionsColor(conf, "key", setKeyColor)
-	setOptionsColor(conf, "no-color", setNoColor)
-	setOptionsColor(conf, "null", setNullColor)
-	setOptionsColor(conf, "number", setNumberColor)
-	setOptionsColor(conf, "string", setStringColor)
-	setOptionsColor(conf, "time", setTimeColor)
-	setOptionsColor(conf, "syntax", setSyntaxColor)
-
-	setHTMLColor(conf, "bool", &sen.HTMLOptions.BoolColor)
-	setHTMLColor(conf, "key", &sen.HTMLOptions.KeyColor)
-	setHTMLColor(conf, "no-color", &sen.HTMLOptions.NoColor)
-	setHTMLColor(conf, "null", &sen.HTMLOptions.NullColor)
-	setHTMLColor(conf, "number", &sen.HTMLOptions.NumberColor)
-	setHTMLColor(conf, "string", &sen.HTMLOptions.StringColor)
-	setHTMLColor(conf, "syntax", &sen.HTMLOptions.SyntaxColor)
-}
+func applyConf(conf any) { _ = "STUB: not implemented"; return }
 
 func setOptionsColor(conf any, key string, fun func(color string)) {
-	for _, v := range jp.C("colors").C(key).Get(conf) {
-		fun(pickColor(alt.String(v)))
-	}
-}
-
-func setBoolColor(color string) {
-	ojg.DefaultOptions.BoolColor = color
-	ojg.BrightOptions.BoolColor = color
-}
-
-func setKeyColor(color string) {
-	ojg.DefaultOptions.KeyColor = color
-	ojg.BrightOptions.KeyColor = color
-}
-
-func setNoColor(color string) {
-	ojg.DefaultOptions.NoColor = color
-	ojg.BrightOptions.NoColor = color
-}
-
-func setNullColor(color string) {
-	ojg.DefaultOptions.NullColor = color
-	ojg.BrightOptions.NullColor = color
-}
-
-func setNumberColor(color string) {
-	ojg.DefaultOptions.NumberColor = color
-	ojg.BrightOptions.NumberColor = color
-}
-
-func setStringColor(color string) {
-	ojg.DefaultOptions.StringColor = color
-	ojg.BrightOptions.StringColor = color
-}
-
-func setTimeColor(color string) {
-	ojg.DefaultOptions.TimeColor = color
-	ojg.BrightOptions.TimeColor = color
-}
-
-func setSyntaxColor(color string) {
-	ojg.DefaultOptions.SyntaxColor = color
-	ojg.BrightOptions.SyntaxColor = color
-}
-
-func setHTMLColor(conf any, key string, sp *string) {
-	for _, v := range jp.C("colors").C(key).Get(conf) {
-		*sp = pickColor(alt.String(v))
-	}
-}
-
-func pickColor(s string) (color string) {
-	switch strings.ToLower(s) {
-	case "normal":
-		color = "\x1b[m"
-	case "black":
-		color = "\x1b[30m"
-	case "red":
-		color = "\x1b[31m"
-	case "green":
-		color = "\x1b[32m"
-	case "yellow":
-		color = "\x1b[33m"
-	case "blue":
-		color = "\x1b[34m"
-	case "magenta":
-		color = "\x1b[35m"
-	case "cyan":
-		color = "\x1b[36m"
-	case "white":
-		color = "\x1b[37m"
-	case "gray":
-		color = "\x1b[90m"
-	case "bright-red":
-		color = "\x1b[91m"
-	case "bright-green":
-		color = "\x1b[92m"
-	case "bright-yellow":
-		color = "\x1b[93m"
-	case "bright-blue":
-		color = "\x1b[94m"
-	case "bright-magenta":
-		color = "\x1b[95m"
-	case "bright-cyan":
-		color = "\x1b[96m"
-	case "bright-white":
-		color = "\x1b[97m"
-	default:
-		panic(fmt.Errorf("%s is not a valid color choice", s))
-	}
+	_ = "STUB: not implemented"
 	return
 }
 
-func displayFnDocs() {
-	fmt.Printf(`
-An assembly plan is described by a JSON document or a SEN document. The format
-is much like LISP but with brackets instead of parenthesis. A plan is
-evaluated by evaluating the plan function which is usually an 'asm'
-function. The plan operates on a data map which is the root during
-evaluation. The source data is in the $.src and the expected assembled output
-should be in $.asm.
+func setBoolColor(color string) { _ = "STUB: not implemented"; return }
 
-An example of a plan in SEN format is (the first asm is optional):
+func setKeyColor(color string) { _ = "STUB: not implemented"; return }
 
-  [ asm
-    [set $.asm {good: bye}]  // set output to {good: bye}
-    [set $.asm.hello world]  // output is now {good: bye, hello: world}
-  ]
+func setNoColor(color string) { _ = "STUB: not implemented"; return }
 
-The functions available are:
+func setNullColor(color string) { _ = "STUB: not implemented"; return }
 
-`)
-	var b []byte
-	var keys []string
-	docs := asm.FnDocs()
-	for k := range docs {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	for _, k := range keys {
-		b = append(b, fmt.Sprintf("  %10s: %s\n\n", k, strings.ReplaceAll(docs[k], "\n", "\n              "))...)
-	}
-	fmt.Println(string(b))
-}
+func setNumberColor(color string) { _ = "STUB: not implemented"; return }
 
-func displayFilterDocs() {
-	fmt.Printf(`
+func setStringColor(color string) { _ = "STUB: not implemented"; return }
 
-JSONPaths can include filters such as $.x[?(@.y == 'z')].value. As with other
-square bracket operators it applies to arrays. The general form of a filter is
-[?(left operator right)]. Both left and right can be constants or JSONPaths
-where @ is each array element. Nested filter are supported. Operators
-supported are:
+func setTimeColor(color string) { _ = "STUB: not implemented"; return }
 
- ==    returns true if left is equal to right.
+func setSyntaxColor(color string) { _ = "STUB: not implemented"; return }
 
- !=    returns true if left is not equal to right.
+func setHTMLColor(conf any, key string, sp *string) { _ = "STUB: not implemented"; return }
 
- <     returns true if left is less than right.
+func pickColor(s string) (color string) { _ = "STUB: not implemented"; return "" }
 
- <=    returns true if left is less than or equal to right.
+func displayFnDocs() { _ = "STUB: not implemented"; return }
 
- >     returns true if left is greater than right.
+func displayFilterDocs() { _ = "STUB: not implemented"; return }
 
- >=    returns true if left is greater than or equal to right.
-
- ||    returns true if either left or right is true
-
- &&    returns true if both left and right are true.
-
- !     inverts the boolean value of the right. No left should be
-       present. Examples are !@.x or !(@.x == 2).
-
- empty returns true if the left empty condition (length is zero) matches the
-       right which must be a boolean.
-
- has   returns true if the left has condition is null or missing matches the
-       right which must be a boolean.
-
- +     returns the sum of left and right.
-
- -     returns the difference of left and right. (left - right)
-
- *     returns the product of left and right.
-
- /     returns left divided by right.
-
- in    returns true if left is in right. Right must be an array either as a
-       constant of the form [1,'a'] or as a path that evaluates to an array.
-
- =~    returns true if left is a string and matches the right regex which can be
-       either a regex delimited by / or a string.
-
-Functions are also support and take the for of [?length(@.x) == 3]. The
-supported functions are:
-
- length(path)        returns the length of the list, object, or string at the
-                     path. If the element does not exist or is not a list,
-                     object, or string then Nothing is returned.
-
- count(path)         returns the number of elements that match the path which
-                     should return a node list.
-
- match(path, regex)  the path should return a string which is then compared to
-                     the regex string. If there is a match to on the entirety of
-                     the string at path then true is returned otherwise if the
-                     string does not match false is returned. I the value at
-                     path is not a string or does not exist then Nothing is
-                     returned.
-
- search(path, regex) the path should return a string which is then compared to
-                     the regex string. If there is a match to on a substring of
-                     the string at path then true is returned otherwise if the
-                     string does not match false is returned. I the value at
-                     path is not a string or does not exist then Nothing is
-                     returned.
-
-`)
-}
-
-func displayConf() {
-	fmt.Printf(`
-If an oj configuration file is present in the local directory or the home
-directory that file is used to set the defaults for oj. The file can be in
-either SEN or JSON format. The paths check, in order are:
-
-  ./.oj-config.sen
-  ./.oj-config.json
-  ~/.oj-config.sen
-  ~/.oj-config.json
-
-The file format (SEN with comments) is:
-
-{
-  bright: true // Color if true will colorize the output with bright colors.
-  color: false // Color if true will colorize the output. The bright option takes precedence.
-  colors: {
-    // Color values can be one of the following:
-    //   normal
-    //   black
-    //   red
-    //   green
-    //   yellow
-    //   blue
-    //   magenta
-    //   cyan
-    //   white
-    //   gray
-    //   bright-red
-    //   bright-green
-    //   bright-yellow
-    //   bright-blue
-    //   bright-magenta
-    //   bright-cyan
-    //   bright-white
-    syntax: normal
-    key: bright-blue
-    null: bright-red
-    bool: bright-yellow
-    number: bright-cyan
-    string: bright-green
-    time: bright-magenta
-    no-color: normal // NoColor turns the color off.
-  }
-  // Either the pretty element can be used or the individual width, depth, and
-  // align options can be specified separately.
-  format: {indent: 2 tab: false pretty: 80.3.false}
-  // format: {indent: 2 tab: false width: 80 depth: 3 align: false}
-  html: {
-    syntax: "<span>"
-    key: '<span style="color:#44f">'
-    null: '<span style="color:red">'
-    bool: '<span style="color:#a40">"
-    number: '<span style="color:#04a">'
-    string: '<span style="color:green">'
-    time: '<span style="color:#f0f">'
-    no-color: "</span>"
-  }
-  html-safe: false
-  lazy: true // -z option, lazy read for SEN format
-  sen: true
-  conv: rfc3339
-  mongo: false
-}
-`)
-}
+func displayConf() { _ = "STUB: not implemented"; return }

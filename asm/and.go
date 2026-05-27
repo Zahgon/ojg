@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "and",
@@ -15,20 +11,4 @@ that do not evaluate to a boolean or null (false) raise an error.`,
 	})
 }
 
-func and(root map[string]any, at any, args ...any) any {
-	val := true
-	for _, arg := range args {
-		switch tv := evalArg(root, at, arg).(type) {
-		case nil:
-			val = false
-		case bool:
-			val = tv
-		default:
-			panic(fmt.Errorf("and expects only boolean arguments. %T is not a boolean", tv))
-		}
-		if !val {
-			break
-		}
-	}
-	return val
-}
+func and(root map[string]any, at any, args ...any) any { _ = "STUB: not implemented"; return *new(any) }

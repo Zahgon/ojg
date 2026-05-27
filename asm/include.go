@@ -2,11 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-	"strings"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "include",
@@ -18,25 +13,6 @@ string and the second string argument is included in the first.`,
 }
 
 func include(root map[string]any, at any, args ...any) any {
-	if len(args) != 2 {
-		panic(fmt.Errorf("include expects two arguments. %d given", len(args)))
-	}
-	v1 := evalArg(root, at, args[1])
-	switch v := evalArg(root, at, args[0]).(type) {
-	case []any:
-		for _, m := range v {
-			if m == v1 {
-				return true
-			}
-		}
-	case string:
-		s, ok := v1.(string)
-		if !ok {
-			panic(fmt.Errorf("include expects a string second argument if the fist is a string, not a %T", v1))
-		}
-		return strings.Contains(v, s)
-	default:
-		panic(fmt.Errorf("include expects an array or string first argument, not a %T", v))
-	}
-	return false
+	_ = "STUB: not implemented"
+	return *new(any)
 }

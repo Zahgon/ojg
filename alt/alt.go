@@ -3,8 +3,6 @@
 package alt
 
 import (
-	"reflect"
-
 	"github.com/ohler55/ojg"
 )
 
@@ -46,48 +44,27 @@ func init() {
 }
 
 // Dup is an alias for Decompose.
-func Dup(v any, options ...*ojg.Options) any {
-	return Decompose(v, options...)
-}
+func Dup(v any, options ...*ojg.Options) any { _ = "STUB: not implemented"; return *new(any) }
 
 // Decompose creates a simple type converting non simple to simple types using
 // either the Simplify() interface or reflection. Unlike Alter() a deep copy
 // is returned leaving the original data unchanged.
-func Decompose(v any, options ...*ojg.Options) any {
-	opt := &DefaultOptions
-	if 0 < len(options) {
-		opt = options[0]
-	}
-	if opt.Converter != nil {
-		v = opt.Converter.Convert(v)
-	}
-	return decompose(v, opt)
-}
+func Decompose(v any, options ...*ojg.Options) any { _ = "STUB: not implemented"; return *new(any) }
 
 // Alter the data into all simple types converting non simple to simple types
 // using either the Simplify() interface or reflection. Unlike Decompose() map
 // and slice members are modified if necessary to assure all elements are
 // simple types.
-func Alter(v any, options ...*ojg.Options) any {
-	opt := &DefaultOptions
-	if 0 < len(options) {
-		opt = options[0]
-	}
-	if opt.Converter != nil {
-		v = opt.Converter.Convert(v)
-	}
-	return alter(v, opt)
-}
+func Alter(v any, options ...*ojg.Options) any { _ = "STUB: not implemented"; return *new(any) }
 
 // Recompose simple data into more complex go types.
 func Recompose(v any, tv ...any) (out any, err error) {
-	return DefaultRecomposer.Recompose(v, tv...)
+	_ = "STUB: not implemented"
+	return *new(any), nil
 }
 
 // MustRecompose simple data into more complex go types and panics on error.
-func MustRecompose(v any, tv ...any) (out any) {
-	return DefaultRecomposer.MustRecompose(v, tv...)
-}
+func MustRecompose(v any, tv ...any) (out any) { _ = "STUB: not implemented"; return *new(any) }
 
 // NewRecomposer creates a new instance. The composers are a map of objects
 // expected and functions to recompose them. If no function is provided then
@@ -96,14 +73,8 @@ func NewRecomposer(
 	createKey string,
 	composers map[any]RecomposeFunc,
 	anyComposers ...map[any]RecomposeAnyFunc) (rec *Recomposer, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = ojg.NewError(r)
-		}
-	}()
-	rec = MustNewRecomposer(createKey, composers, anyComposers...)
-
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // MustNewRecomposer creates a new instance. The composers are a map of objects
@@ -113,25 +84,6 @@ func MustNewRecomposer(
 	createKey string,
 	composers map[any]RecomposeFunc,
 	anyComposers ...map[any]RecomposeAnyFunc) *Recomposer {
-
-	r := Recomposer{
-		CreateKey:     createKey,
-		composers:     map[string]*composer{},
-		NumConvMethod: ojg.DefaultNumConvMethod,
-	}
-	for v, fun := range composers {
-		rt := reflect.TypeOf(v)
-		if _, err := r.registerComposer(rt, fun, ""); err != nil {
-			panic(err)
-		}
-	}
-	if 0 < len(anyComposers) {
-		for v, fun := range anyComposers[0] {
-			rt := reflect.TypeOf(v)
-			if _, err := r.registerAnyComposer(rt, fun); err != nil {
-				panic(err)
-			}
-		}
-	}
-	return &r
+	_ = "STUB: not implemented"
+	return nil
 }

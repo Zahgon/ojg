@@ -3,8 +3,6 @@
 package gen
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -23,59 +21,35 @@ var TimeWrap = ""
 type Time time.Time
 
 // String returns a string representation of the Node.
-func (n Time) String() string {
-	var b strings.Builder
-
-	n.buildString(&b)
-
-	return b.String()
-}
+func (n Time) String() string { _ = "STUB: not implemented"; return "" }
 
 // Alter returns the backing time.Time value of the Node.
 func (n Time) Alter() any {
-	return time.Time(n)
+	_ = "STUB: not implemented"
+	return *
+
+	// Simplify returns the backing time.Time value of the Node.
+	new(any)
 }
 
-// Simplify returns the backing time.Time value of the Node.
 func (n Time) Simplify() any {
-	return time.Time(n)
+	_ = "STUB: not implemented"
+	return *
+
+	// Dup returns the backing time.Time value of the Node.
+	new(any)
 }
 
-// Dup returns the backing time.Time value of the Node.
 func (n Time) Dup() Node {
-	return n
+	_ = "STUB: not implemented"
+
+	// Empty returns false.
+	return *new(Node)
 }
 
-// Empty returns false.
-func (n Time) Empty() bool {
-	return false
-}
+func (n Time) Empty() bool { _ = "STUB: not implemented"; return false }
 
-func (n Time) buildString(b *strings.Builder) {
-	if 0 < len(TimeWrap) {
-		b.WriteString(`{"`)
-		b.WriteString(TimeWrap)
-		b.WriteString(`":`)
-	}
-	switch TimeFormat {
-	case "", "nano":
-		b.WriteString(strconv.FormatInt(time.Time(n).UnixNano(), 10))
-	case "second":
-		// Decimal format but float is not accurate enough so build the output
-		// in two parts.
-		nano := time.Time(n).UnixNano()
-		secs := nano / int64(time.Second)
-		if 0 < nano {
-			_, _ = fmt.Fprintf(b, "%d.%09d", secs, nano-(secs*int64(time.Second)))
-		} else {
-			_, _ = fmt.Fprintf(b, "%d.%09d", secs, -nano+(secs*int64(time.Second)))
-		}
-	default:
-		b.WriteString(`"`)
-		b.WriteString(time.Time(n).Format(TimeFormat))
-		b.WriteString(`"`)
-	}
-	if 0 < len(TimeWrap) {
-		b.WriteString("}")
-	}
-}
+func (n Time) buildString(b *strings.Builder) { _ = "STUB: not implemented"; return }
+
+// Decimal format but float is not accurate enough so build the output
+// in two parts.

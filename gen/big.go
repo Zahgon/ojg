@@ -7,25 +7,31 @@ type Big string
 
 // String representation of the number.
 func (n Big) String() string {
-	return string(n)
+	_ = "STUB: not implemented"
+
+	// Alter returns the backing string.
+	return ""
 }
 
-// Alter returns the backing string.
 func (n Big) Alter() any {
-	return string(n)
+	_ = "STUB: not implemented"
+
+	// Simplify the Node into a string.
+	return *new(any)
 }
 
-// Simplify the Node into a string.
 func (n Big) Simplify() any {
-	return string(n)
+	_ = "STUB: not implemented"
+
+	// Dup returns itself since it is immutable.
+	return *new(any)
 }
 
-// Dup returns itself since it is immutable.
 func (n Big) Dup() Node {
-	return n
+	_ = "STUB: not implemented"
+
+	// Empty returns true if the backing string is empty.
+	return *new(Node)
 }
 
-// Empty returns true if the backing string is empty.
-func (n Big) Empty() bool {
-	return len(string(n)) == 0
-}
+func (n Big) Empty() bool { _ = "STUB: not implemented"; return false }

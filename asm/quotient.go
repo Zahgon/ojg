@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "quotient",
@@ -26,39 +22,6 @@ be raised.`,
 }
 
 func quotient(root map[string]any, at any, args ...any) any {
-	var iq int64
-	var fq float64
-	isFloat := false
-	for i, arg := range args {
-		switch v := evalArg(root, at, arg).(type) {
-		case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
-			ii, _ := asInt(v)
-			switch {
-			case i == 0:
-				iq = ii
-			case isFloat:
-				fq /= float64(ii)
-			default:
-				iq /= ii
-			}
-		case float32, float64:
-			f, _ := asFloat(v)
-			switch {
-			case i == 0:
-				fq = f
-				isFloat = true
-			case isFloat:
-				fq /= f
-			default:
-				isFloat = true
-				fq = float64(iq) / f
-			}
-		default:
-			panic(fmt.Errorf("a %T argument can not be an argument to quotient", v))
-		}
-	}
-	if isFloat {
-		return fq
-	}
-	return iq
+	_ = "STUB: not implemented"
+	return *new(any)
 }

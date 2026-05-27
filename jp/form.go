@@ -23,23 +23,4 @@ type Form struct {
 }
 
 // Simplify the form.
-func (f *Form) Simplify() any {
-	simple := map[string]any{"op": f.Op}
-	switch tv := f.Left.(type) {
-	case Expr:
-		simple["left"] = tv.String()
-	case *Form:
-		simple["left"] = tv.Simplify()
-	default:
-		simple["left"] = tv
-	}
-	switch tv := f.Right.(type) {
-	case Expr:
-		simple["right"] = tv.String()
-	case *Form:
-		simple["right"] = tv.Simplify()
-	default:
-		simple["right"] = tv
-	}
-	return simple
-}
+func (f *Form) Simplify() any { _ = "STUB: not implemented"; return *new(any) }

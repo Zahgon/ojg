@@ -4,8 +4,6 @@ package alt
 
 import (
 	"reflect"
-	"strconv"
-	"unsafe"
 )
 
 var int64ValFuncs = [8]valFunc{
@@ -20,43 +18,41 @@ var int64ValFuncs = [8]valFunc{
 }
 
 func valInt64(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return *(*int64)(unsafe.Pointer(addr + fi.offset)), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valInt64AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatInt(*(*int64)(unsafe.Pointer(addr + fi.offset)), 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valInt64NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*int64)(unsafe.Pointer(addr + fi.offset))
-	return v, nilValue, v == 0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valInt64NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*int64)(unsafe.Pointer(addr + fi.offset))
-	if v == 0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatInt(v, 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalInt64(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return rv.FieldByIndex(fi.index).Int(), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalInt64AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatInt(rv.FieldByIndex(fi.index).Int(), 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalInt64NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Int()
-	return v, nilValue, v == 0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalInt64NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Int()
-	if v == 0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatInt(v, 10), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }

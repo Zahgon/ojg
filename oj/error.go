@@ -2,8 +2,6 @@
 
 package oj
 
-import "fmt"
-
 // ParseError represents a parse error.
 type ParseError struct {
 	Message string
@@ -12,6 +10,4 @@ type ParseError struct {
 }
 
 // Error returns a string representation of the error.
-func (err *ParseError) Error() string {
-	return fmt.Sprintf("%s at %d:%d", err.Message, err.Line, err.Column)
-}
+func (err *ParseError) Error() string { _ = "STUB: not implemented"; return "" }

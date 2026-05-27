@@ -4,8 +4,6 @@ package alt
 
 import (
 	"reflect"
-	"strconv"
-	"unsafe"
 )
 
 var float32ValFuncs = [8]valFunc{
@@ -20,43 +18,41 @@ var float32ValFuncs = [8]valFunc{
 }
 
 func valFloat32(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return *(*float32)(unsafe.Pointer(addr + fi.offset)), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valFloat32AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatFloat(float64(*(*float32)(unsafe.Pointer(addr + fi.offset))), 'g', -1, 32), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valFloat32NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*float32)(unsafe.Pointer(addr + fi.offset))
-	return v, nilValue, v == 0.0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func valFloat32NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := *(*float32)(unsafe.Pointer(addr + fi.offset))
-	if v == 0.0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatFloat(float64(v), 'g', -1, 32), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalFloat32(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return rv.FieldByIndex(fi.index).Float(), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalFloat32AsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	return strconv.FormatFloat(rv.FieldByIndex(fi.index).Float(), 'g', -1, 32), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalFloat32NotEmpty(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Float()
-	return v, nilValue, v == 0.0
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }
 
 func ivalFloat32NotEmptyAsString(fi *finfo, rv reflect.Value, addr uintptr) (any, reflect.Value, bool) {
-	v := rv.FieldByIndex(fi.index).Float()
-	if v == 0.0 {
-		return nil, nilValue, true
-	}
-	return strconv.FormatFloat(float64(v), 'g', -1, 32), nilValue, false
+	_ = "STUB: not implemented"
+	return *new(any), *new(reflect.Value), false
 }

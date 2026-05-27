@@ -3,8 +3,6 @@
 package ojg
 
 import (
-	"fmt"
-	"strconv"
 	"time"
 )
 
@@ -254,81 +252,13 @@ type Options struct {
 
 // AppendTime appends a time string to the buffer.
 func (o *Options) AppendTime(buf []byte, t time.Time, sen bool) []byte {
-	if o.TimeMap {
-		buf = append(buf, '{')
-		if sen {
-			buf = AppendSENString(buf, o.CreateKey, o.HTMLUnsafe)
-		} else {
-			buf = AppendJSONString(buf, o.CreateKey, o.HTMLUnsafe)
-		}
-		buf = append(buf, ':')
-		if sen {
-			if o.FullTypePath {
-				buf = append(buf, `"time/Time" value:`...)
-			} else {
-				buf = append(buf, "Time value:"...)
-			}
-		} else {
-			if o.FullTypePath {
-				buf = append(buf, `"time/Time","value":`...)
-			} else {
-				buf = append(buf, `"Time","value":`...)
-			}
-		}
-	} else if 0 < len(o.TimeWrap) {
-		buf = append(buf, '{')
-		if sen {
-			buf = AppendSENString(buf, o.TimeWrap, o.HTMLUnsafe)
-		} else {
-			buf = AppendJSONString(buf, o.TimeWrap, o.HTMLUnsafe)
-		}
-		buf = append(buf, ':')
-	}
-	switch o.TimeFormat {
-	case "", "nano":
-		buf = strconv.AppendInt(buf, t.UnixNano(), 10)
-	case "second":
-		// Decimal format but float is not accurate enough so build the output
-		// in two parts.
-		nano := t.UnixNano()
-		secs := nano / int64(time.Second)
-		if 0 < nano {
-			buf = append(buf, fmt.Sprintf("%d.%09d", secs, nano-(secs*int64(time.Second)))...)
-		} else {
-			buf = append(buf, fmt.Sprintf("%d.%09d", secs, -(nano-(secs*int64(time.Second))))...)
-		}
-	default:
-		buf = append(buf, '"')
-		buf = t.AppendFormat(buf, o.TimeFormat)
-		buf = append(buf, '"')
-	}
-	if 0 < len(o.TimeWrap) || o.TimeMap {
-		buf = append(buf, '}')
-	}
-	return buf
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Decimal format but float is not accurate enough so build the output
+// in two parts.
 
 // DecomposeTime encodes time in the format specified by the settings of the
 // options.
-func (o *Options) DecomposeTime(t time.Time) (v any) {
-	switch o.TimeFormat {
-	case "time":
-		v = t
-	case "", "nano":
-		v = t.UnixNano()
-	case "second":
-		v = float64(t.UnixNano()) / float64(time.Second)
-	default:
-		v = t.Format(o.TimeFormat)
-	}
-	if o.TimeMap {
-		if o.FullTypePath {
-			v = map[string]any{o.CreateKey: "time/Time", "value": v}
-		} else {
-			v = map[string]any{o.CreateKey: "Time", "value": v}
-		}
-	} else if 0 < len(o.TimeWrap) {
-		v = map[string]any{o.TimeWrap: v}
-	}
-	return
-}
+func (o *Options) DecomposeTime(t time.Time) (v any) { _ = "STUB: not implemented"; return *new(any) }

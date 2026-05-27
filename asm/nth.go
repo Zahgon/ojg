@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "nth",
@@ -17,25 +13,4 @@ the array.`,
 	})
 }
 
-func nth(root map[string]any, at any, args ...any) any {
-	if len(args) != 2 {
-		panic(fmt.Errorf("nth expects exactly two arguments. %d given", len(args)))
-	}
-	v := evalArg(root, at, args[0])
-	list, ok := v.([]any)
-	if !ok {
-		panic(fmt.Errorf("nth expected an array argument, not a %T", v))
-	}
-	v = evalArg(root, at, args[1])
-	var index int64
-	if index, ok = asInt(v); !ok {
-		panic(fmt.Errorf("nth expects an integer second argument, not a %T", v))
-	}
-	if index < 0 {
-		index = int64(len(list)) + index
-	}
-	if index < 0 || int64(len(list)) <= index {
-		return nil
-	}
-	return list[index]
-}
+func nth(root map[string]any, at any, args ...any) any { _ = "STUB: not implemented"; return *new(any) }

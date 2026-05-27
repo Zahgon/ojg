@@ -2,10 +2,6 @@
 
 package asm
 
-import (
-	"fmt"
-)
-
 func init() {
 	Define(&Fn{
 		Name: "size",
@@ -16,17 +12,6 @@ For all other types zero is returned`,
 }
 
 func size(root map[string]any, at any, args ...any) any {
-	if len(args) != 1 {
-		panic(fmt.Errorf("size expects exactly one arguments. %d given", len(args)))
-	}
-	var length int
-	switch tv := evalArg(root, at, args[0]).(type) {
-	case string:
-		length = len(tv)
-	case []any:
-		length = len(tv)
-	case map[string]any:
-		length = len(tv)
-	}
-	return length
+	_ = "STUB: not implemented"
+	return *new(any)
 }

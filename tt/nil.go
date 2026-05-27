@@ -3,25 +3,11 @@
 package tt
 
 import (
-	"fmt"
-	"strings"
 	"testing"
 )
 
 // Nil check.
-func Nil(t *testing.T, actual any, args ...any) {
-	if !isNil(actual) {
-		var b strings.Builder
-		b.WriteString(fmt.Sprintf("\nexpect: nil\nactual: (%T) %v\n", actual, actual))
-		finishFail(t, &b, args)
-	}
-}
+func Nil(t *testing.T, actual any, args ...any) { _ = "STUB: not implemented"; return }
 
 // NotNil check.
-func NotNil(t *testing.T, actual any, args ...any) {
-	if isNil(actual) {
-		var b strings.Builder
-		b.WriteString("\nexpect: not nil\nactual: nil\n")
-		finishFail(t, &b, args)
-	}
-}
+func NotNil(t *testing.T, actual any, args ...any) { _ = "STUB: not implemented"; return }

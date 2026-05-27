@@ -15,8 +15,4 @@ func init() {
 	})
 }
 
-func neq(root map[string]any, at any, args ...any) any {
-	b, _ := equal(root, at, args...).(bool)
-
-	return !b
-}
+func neq(root map[string]any, at any, args ...any) any { _ = "STUB: not implemented"; return *new(any) }

@@ -4,150 +4,149 @@ package jp
 
 // X creates an empty Expr.
 func X() Expr {
-	return Expr{}
+	_ = "STUB: not implemented"
+
+	// A creates an Expr with a At (@) fragment.
+	return *new(Expr)
 }
 
-// A creates an Expr with a At (@) fragment.
 func A() Expr {
-	return Expr{At('@')}
+	_ = "STUB: not implemented"
+	return *
+
+	// B creates an Expr with a Bracket fragment.
+	new(Expr)
 }
 
-// B creates an Expr with a Bracket fragment.
 func B() Expr {
-	return Expr{Bracket(' ')}
+	_ = "STUB: not implemented"
+	return *
+
+	// C creates an Expr with a Child fragment.
+	new(Expr)
 }
 
-// C creates an Expr with a Child fragment.
 func C(key string) Expr {
-	return Expr{Child(key)}
+	_ = "STUB: not implemented"
+	return *
+
+	// D creates an Expr with a recursive Descent fragment.
+	new(Expr)
 }
 
-// D creates an Expr with a recursive Descent fragment.
 func D() Expr {
-	return Expr{Descent('.')}
+	_ = "STUB: not implemented"
+	return *
+
+	// F creates an Expr with a Filter fragment.
+	new(Expr)
 }
 
-// F creates an Expr with a Filter fragment.
 func F(e *Equation) Expr {
-	return Expr{e.Filter()}
+	_ = "STUB: not implemented"
+	return *
+
+	// N creates an Expr with an Nth fragment.
+	new(Expr)
 }
 
-// N creates an Expr with an Nth fragment.
 func N(n int) Expr {
-	return Expr{Nth(n)}
+	_ = "STUB: not implemented"
+	return *
+
+	// R creates an Expr with a Root fragment.
+	new(Expr)
 }
 
-// R creates an Expr with a Root fragment.
 func R() Expr {
-	return Expr{Root('$')}
+	_ = "STUB: not implemented"
+	return *
+
+	// S creates an Expr with a Slice fragment.
+	new(Expr)
 }
 
-// S creates an Expr with a Slice fragment.
-func S(start int, rest ...int) Expr {
-	return Expr{Slice(append([]int{start}, rest...))}
-}
+func S(start int, rest ...int) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // U creates an Expr with an Union fragment.
-func U(keys ...any) Expr {
-	return Expr{NewUnion(keys...)}
-}
+func U(keys ...any) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // W creates an Expr with a Wildcard fragment.
-func W() Expr {
-	return Expr{Wildcard('*')}
-}
+func W() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // A appends an At fragment to the Expr.
 func (x Expr) A() Expr {
-	return append(x, At('@'))
+	_ = "STUB: not implemented"
+	return *
+
+	// At appends an At fragment to the Expr.
+	new(Expr)
 }
 
-// At appends an At fragment to the Expr.
 func (x Expr) At() Expr {
-	return append(x, At('@'))
+	_ = "STUB: not implemented"
+	return *
+
+	// B appends a Bracket fragment to the Expr.
+	new(Expr)
 }
 
-// B appends a Bracket fragment to the Expr.
-func (x Expr) B() Expr {
-	return append(x, Bracket(' '))
-}
+func (x Expr) B() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // C appends a Child fragment to the Expr.
-func (x Expr) C(key string) Expr {
-	return append(x, Child(key))
-}
+func (x Expr) C(key string) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Child appends a Child fragment to the Expr.
-func (x Expr) Child(key string) Expr {
-	return append(x, Child(key))
-}
+func (x Expr) Child(key string) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // D appends a recursive Descent fragment to the Expr.
-func (x Expr) D() Expr {
-	return append(x, Descent('.'))
-}
+func (x Expr) D() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Descent appends a recursive Descent fragment to the Expr.
-func (x Expr) Descent() Expr {
-	return append(x, Descent('.'))
-}
+func (x Expr) Descent() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // F appends a Filter fragment to the Expr.
-func (x Expr) F(e *Equation) Expr {
-	return append(x, e.Filter())
-}
+func (x Expr) F(e *Equation) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Filter appends a Filter fragment to the Expr.
-func (x Expr) Filter(e *Equation) Expr {
-	return append(x, e.Filter())
-}
+func (x Expr) Filter(e *Equation) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // N appends an Nth fragment to the Expr.
 func (x Expr) N(n int) Expr {
-	return append(x, Nth(n))
+	_ = "STUB: not implemented"
+	return *
+
+	// Nth appends an Nth fragment to the Expr.
+	new(Expr)
 }
 
-// Nth appends an Nth fragment to the Expr.
 func (x Expr) Nth(n int) Expr {
-	return append(x, Nth(n))
+	_ = "STUB: not implemented"
+	return *
+
+	// R appends a Root fragment to the Expr.
+	new(Expr)
 }
 
-// R appends a Root fragment to the Expr.
-func (x Expr) R() Expr {
-	return append(x, Root('$'))
-}
+func (x Expr) R() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Root appends a Root fragment to the Expr.
-func (x Expr) Root() Expr {
-	return append(x, Root('$'))
-}
+func (x Expr) Root() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // S appends a Slice fragment to the Expr.
-func (x Expr) S(start int, rest ...int) Expr {
-	return append(x, Slice(append([]int{start}, rest...)))
-}
+func (x Expr) S(start int, rest ...int) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Slice appends a Slice fragment to the Expr.
-func (x Expr) Slice(start int, rest ...int) Expr {
-	return append(x, Slice(append([]int{start}, rest...)))
-}
+func (x Expr) Slice(start int, rest ...int) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // U appends a Union fragment to the Expr.
-func (x Expr) U(keys ...any) Expr {
-	return append(x, NewUnion(keys...))
-}
+func (x Expr) U(keys ...any) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Union appends a Union fragment to the Expr.
-func (x Expr) Union(keys ...any) Expr {
-	return append(x, NewUnion(keys...))
-}
+func (x Expr) Union(keys ...any) Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // W appends a Wildcard fragment to the Expr.
-func (x Expr) W() Expr {
-	return append(x, Wildcard('*'))
-}
+func (x Expr) W() Expr { _ = "STUB: not implemented"; return *new(Expr) }
 
 // Wildcard appends a Wildcard fragment to the Expr.
-func (x Expr) Wildcard() Expr {
-	return append(x, Wildcard('*'))
-}
+func (x Expr) Wildcard() Expr { _ = "STUB: not implemented"; return *new(Expr) }

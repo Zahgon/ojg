@@ -6,26 +6,28 @@ package gen
 type String string
 
 // String returns a string representation of the Node.
-func (n String) String() string {
-	return `"` + string(n) + `"`
-}
+func (n String) String() string { _ = "STUB: not implemented"; return "" }
 
 // Alter returns the backing float64 value of the Node.
 func (n String) Alter() any {
-	return string(n)
+	_ = "STUB: not implemented"
+
+	// Simplify returns the backing float64 value of the Node.
+	return *new(any)
 }
 
-// Simplify returns the backing float64 value of the Node.
 func (n String) Simplify() any {
-	return string(n)
+	_ = "STUB: not implemented"
+
+	// Dup returns the backing float64 value of the Node.
+	return *new(any)
 }
 
-// Dup returns the backing float64 value of the Node.
 func (n String) Dup() Node {
-	return n
+	_ = "STUB: not implemented"
+
+	// Empty returns false if the string has no characters and true otherwise.
+	return *new(Node)
 }
 
-// Empty returns false if the string has no characters and true otherwise.
-func (n String) Empty() bool {
-	return len(string(n)) == 0
-}
+func (n String) Empty() bool { _ = "STUB: not implemented"; return false }

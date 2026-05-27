@@ -2,11 +2,6 @@
 
 package ojg
 
-import (
-	"fmt"
-	"runtime/debug"
-)
-
 // ErrorWithStack if true the Error() call will include the stack.
 var ErrorWithStack = false
 
@@ -17,22 +12,10 @@ type Error struct {
 }
 
 // NewError creates a new Error instance, capturing the stack when created.
-func NewError(r any) *Error {
-	return &Error{
-		msg:   fmt.Sprintf("%v", r),
-		stack: debug.Stack(),
-	}
-}
+func NewError(r any) *Error { _ = "STUB: not implemented"; return nil }
 
 // Error returns a string representation of the instance.
-func (err *Error) Error() string {
-	if ErrorWithStack {
-		return string(append(append([]byte(err.msg), '\n'), err.stack...))
-	}
-	return err.msg
-}
+func (err *Error) Error() string { _ = "STUB: not implemented"; return "" }
 
 // Stack returns the stack.
-func (err *Error) Stack() []byte {
-	return err.stack
-}
+func (err *Error) Stack() []byte { _ = "STUB: not implemented"; return nil }

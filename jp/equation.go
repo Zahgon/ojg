@@ -4,7 +4,6 @@ package jp
 
 import (
 	"regexp"
-	"strconv"
 )
 
 // Equation represents JSON Path script and filter equations. They are used to
@@ -19,27 +18,10 @@ type Equation struct {
 }
 
 // MustParseEquation parses the string argument and returns an Equation or panics.
-func MustParseEquation(str string) (eq *Equation) {
-	p := &parser{buf: []byte(str)}
-	eq = precedentCorrect(p.readEq())
-
-	return reduceGroups(eq, nil)
-}
+func MustParseEquation(str string) (eq *Equation) { _ = "STUB: not implemented"; return nil }
 
 // Script creates and returns a Script that implements the equation.
-func (e *Equation) Script() *Script {
-	if e.o == nil {
-		if _, ok := e.result.(Expr); ok {
-			e2 := &Equation{
-				left:  &Equation{result: e.result},
-				o:     exists,
-				right: &Equation{result: true},
-			}
-			return &Script{template: e2.buildScript([]any{})}
-		}
-	}
-	return &Script{template: e.buildScript([]any{})}
-}
+func (e *Equation) Script() *Script { _ = "STUB: not implemented"; return nil }
 
 // Inspect is a debugging function for inspecting an equation tree.
 // func (e *Equation) Inspect(b []byte, depth int) []byte {
@@ -71,335 +53,127 @@ func (e *Equation) Script() *Script {
 // }
 
 // Filter creates and returns a Script that implements the equation.
-func (e *Equation) Filter() (f *Filter) {
-	f = &Filter{Script: Script{template: e.buildScript([]any{})}}
-	return
-}
+func (e *Equation) Filter() (f *Filter) { _ = "STUB: not implemented"; return nil }
 
 // ConstNil creates and returns an Equation for a constant of nil.
-func ConstNil() *Equation {
-	return &Equation{result: nil}
-}
+func ConstNil() *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstNothing creates and returns an Equation for a constant of nothing.
-func ConstNothing() *Equation {
-	return &Equation{result: Nothing}
-}
+func ConstNothing() *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstBool creates and returns an Equation for a bool constant.
-func ConstBool(b bool) *Equation {
-	return &Equation{result: b}
-}
+func ConstBool(b bool) *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstInt creates and returns an Equation for an int64 constant.
-func ConstInt(i int64) *Equation {
-	return &Equation{result: i}
-}
+func ConstInt(i int64) *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstFloat creates and returns an Equation for a float64 constant.
-func ConstFloat(f float64) *Equation {
-	return &Equation{result: f}
-}
+func ConstFloat(f float64) *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstString creates and returns an Equation for a string constant.
-func ConstString(s string) *Equation {
-	return &Equation{result: s}
-}
+func ConstString(s string) *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstList creates and returns an Equation for an []any constant.
-func ConstList(list []any) *Equation {
-	return &Equation{result: list}
-}
+func ConstList(list []any) *Equation { _ = "STUB: not implemented"; return nil }
 
 // ConstRegex creates and returns an Equation for a regex constant.
-func ConstRegex(rx *regexp.Regexp) *Equation {
-	return &Equation{result: rx}
-}
+func ConstRegex(rx *regexp.Regexp) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Get creates and returns an Equation for an expression get of the form
 // @.child.
-func Get(x Expr) *Equation {
-	return &Equation{o: get, left: &Equation{result: x}}
-}
+func Get(x Expr) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Eq creates and returns an Equation for an == operator.
-func Eq(left, right *Equation) *Equation {
-	return &Equation{o: eq, left: left, right: right}
-}
+func Eq(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Neq creates and returns an Equation for a != operator.
-func Neq(left, right *Equation) *Equation {
-	return &Equation{o: neq, left: left, right: right}
-}
+func Neq(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Lt creates and returns an Equation for a < operator.
-func Lt(left, right *Equation) *Equation {
-	return &Equation{o: lt, left: left, right: right}
-}
+func Lt(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Gt creates and returns an Equation for a > operator.
-func Gt(left, right *Equation) *Equation {
-	return &Equation{o: gt, left: left, right: right}
-}
+func Gt(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Lte creates and returns an Equation for a <= operator.
-func Lte(left, right *Equation) *Equation {
-	return &Equation{o: lte, left: left, right: right}
-}
+func Lte(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Gte creates and returns an Equation for a >= operator.
-func Gte(left, right *Equation) *Equation {
-	return &Equation{o: gte, left: left, right: right}
-}
+func Gte(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Or creates and returns an Equation for a || operator.
-func Or(left, right *Equation) *Equation {
-	return &Equation{o: or, left: left, right: right}
-}
+func Or(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // And creates and returns an Equation for a && operator.
-func And(left, right *Equation) *Equation {
-	return &Equation{o: and, left: left, right: right}
-}
+func And(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Not creates and returns an Equation for a ! operator.
-func Not(arg *Equation) *Equation {
-	return &Equation{o: not, left: arg}
-}
+func Not(arg *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Add creates and returns an Equation for a + operator.
-func Add(left, right *Equation) *Equation {
-	return &Equation{o: add, left: left, right: right}
-}
+func Add(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Sub creates and returns an Equation for a - operator.
-func Sub(left, right *Equation) *Equation {
-	return &Equation{o: sub, left: left, right: right}
-}
+func Sub(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Multiply creates and returns an Equation for a * operator.
-func Multiply(left, right *Equation) *Equation {
-	return &Equation{o: mult, left: left, right: right}
-}
+func Multiply(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Divide creates and returns an Equation for a / operator.
-func Divide(left, right *Equation) *Equation {
-	return &Equation{o: divide, left: left, right: right}
-}
+func Divide(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // In creates and returns an Equation for an in operator.
-func In(left, right *Equation) *Equation {
-	return &Equation{o: in, left: left, right: right}
-}
+func In(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Empty creates and returns an Equation for an empty operator.
-func Empty(left, right *Equation) *Equation {
-	return &Equation{o: empty, left: left, right: right}
-}
+func Empty(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Has creates and returns an Equation for a has operator.
-func Has(left, right *Equation) *Equation {
-	return &Equation{o: has, left: left, right: right}
-}
+func Has(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Exists creates and returns an Equation for a exists operator.
-func Exists(left, right *Equation) *Equation {
-	return &Equation{o: exists, left: left, right: right}
-}
+func Exists(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Regex creates and returns an Equation for a regex operator.
-func Regex(left, right *Equation) *Equation {
-	return &Equation{o: rx, left: left, right: right}
-}
+func Regex(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Length creates and returns an Equation for a length function.
-func Length(x Expr) *Equation {
-	return &Equation{o: length, left: &Equation{result: x}}
-}
+func Length(x Expr) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Count creates and returns an Equation for a count function.
-func Count(x Expr) *Equation {
-	return &Equation{o: count, left: &Equation{result: x}}
-}
+func Count(x Expr) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Match creates and returns an Equation for a match function.
-func Match(left, right *Equation) *Equation {
-	return &Equation{o: match, left: left, right: right}
-}
+func Match(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Search creates and returns an Equation for a search function.
-func Search(left, right *Equation) *Equation {
-	return &Equation{o: search, left: left, right: right}
-}
+func Search(left, right *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
 // Append a equation string representation to a buffer.
-func (e *Equation) Append(buf []byte, parens bool) []byte {
-	if e.o != nil {
-		switch e.o.code {
-		case not.code, length.code, count.code, match.code, search.code, group.code:
-			parens = false
-		}
-	}
-	if parens {
-		buf = append(buf, '(')
-	}
-	if e.o == nil {
-		buf = e.appendValue(buf, e.result)
-	} else {
-		switch e.o.code {
-		case not.code:
-			buf = append(buf, '!')
-			if e.left != nil {
-				buf = e.left.Append(buf, e.left.o != nil && e.left.o.prec >= e.o.prec)
-			}
-		case get.code:
-			if e.left != nil {
-				buf = e.appendValue(buf, e.left.result)
-			}
-		case length.code, count.code:
-			buf = append(buf, e.o.name...)
-			buf = append(buf, '(')
-			buf = e.appendValue(buf, e.left.result)
-			buf = append(buf, ')')
-		case match.code, search.code:
-			buf = append(buf, e.o.name...)
-			buf = append(buf, '(')
-			buf = e.left.Append(buf, false)
-			buf = append(buf, ',', ' ')
-			buf = e.right.Append(buf, false)
-			buf = append(buf, ')')
-		case group.code:
-			if e.left != nil {
-				buf = e.left.Append(buf, e.left.o != nil && e.left.o.prec >= e.o.prec)
-			}
-		default:
-			if e.left != nil {
-				buf = e.left.Append(buf, e.left.o != nil && e.left.o.prec >= e.o.prec)
-			}
-			buf = append(buf, ' ')
-			buf = append(buf, e.o.name...)
-			buf = append(buf, ' ')
-			if e.right != nil {
-				buf = e.right.Append(buf, e.left.o != nil && e.left.o.prec >= e.o.prec)
-			}
-		}
-	}
-	if parens {
-		buf = append(buf, ')')
-	}
-	return buf
-}
+func (e *Equation) Append(buf []byte, parens bool) []byte { _ = "STUB: not implemented"; return nil }
 
-func (e *Equation) appendValue(buf []byte, v any) []byte {
-	switch tv := v.(type) {
-	case nil:
-		buf = append(buf, "null"...)
-	case nothing:
-		buf = append(buf, "Nothing"...)
-	case string:
-		buf = AppendString(buf, tv, '\'')
-	case int64:
-		buf = append(buf, strconv.FormatInt(tv, 10)...)
-	case float64:
-		buf = append(buf, strconv.FormatFloat(tv, 'g', -1, 64)...)
-	case bool:
-		if tv {
-			buf = append(buf, "true"...)
-		} else {
-			buf = append(buf, "false"...)
-		}
-	case []any:
-		buf = append(buf, '[')
-		for i, ev := range tv {
-			if 0 < i {
-				buf = append(buf, ',')
-			}
-			buf = e.appendValue(buf, ev)
-		}
-		buf = append(buf, ']')
-	case Expr:
-		buf = tv.Append(buf)
-	case *regexp.Regexp:
-		buf = AppendString(buf, tv.String(), '/')
-	}
-	return buf
-}
+func (e *Equation) appendValue(buf []byte, v any) []byte { _ = "STUB: not implemented"; return nil }
 
 // String representation of the equation.
-func (e *Equation) String() string {
-	return string(e.Append([]byte{}, true))
-}
+func (e *Equation) String() string { _ = "STUB: not implemented"; return "" }
 
-func (e *Equation) buildScript(stack []any) []any {
-	if e.o == nil {
-		stack = append(stack, e.result)
-		return stack
-	}
-	if e.o.code == get.code {
-		if e.left != nil {
-			if x, ok := e.left.result.(Expr); ok {
-				e.left.result = normalExpr(x)
-			}
-			stack = append(stack, e.left.result) // should always be an Expr
-		}
-	} else {
-		stack = append(stack, e.o)
-		if e.left == nil {
-			stack = append(stack, nil)
-		} else {
-			stack = e.left.buildScript(stack)
-		}
-		if 1 < e.o.cnt {
-			if e.right == nil {
-				stack = append(stack, nil)
-			} else {
-				stack = e.right.buildScript(stack)
-			}
-		}
-	}
-	return stack
-}
+func (e *Equation) buildScript(stack []any) []any { _ = "STUB: not implemented"; return nil }
+
+// should always be an Expr
 
 // Parsing of an equation is from left to right. Each equation is added to the
 // equation right side with no regard for precedence. This function then
 // reorganizes the equations to be in the correct evaluation order based on
 // the precedent.
-func precedentCorrect(e *Equation) *Equation {
-	if e == nil || e.o == nil { // a result or empty/nothing
-		return e
-	}
-	// The left precedence correction is called too many times. Could add a
-	// flag to Equation indicating it has already been corrected or just
-	// process more than once for a small performance hit on parsing the
-	// equation.
-	if e.left != nil {
-		e.left = precedentCorrect(e.left)
-	}
-	if e.right == nil || e.right.o == nil {
-		return e
-	}
-	if e.o.prec <= e.right.o.prec {
-		r := e.right
-		e.right = r.left
-		r.left = e
-		return precedentCorrect(r)
-	}
-	e.right = precedentCorrect(e.right)
-	if e.right.o != nil && e.o.prec <= e.right.o.prec {
-		e = precedentCorrect(e)
-	}
-	return e
-}
+func precedentCorrect(e *Equation) *Equation { _ = "STUB: not implemented"; return nil }
 
-func reduceGroups(e *Equation, po *op) *Equation {
-	if e == nil || e.o == nil { // a result or empty/nothing
-		return e
-	}
-	if e.o.code == group.code && (po == nil || (e.left != nil && e.left.o != nil && e.left.o.prec < po.prec)) {
-		return reduceGroups(e.left, po)
-	}
-	e.left = reduceGroups(e.left, e.o)
-	e.right = reduceGroups(e.right, e.o)
+// a result or empty/nothing
 
-	return e
-}
+// The left precedence correction is called too many times. Could add a
+// flag to Equation indicating it has already been corrected or just
+// process more than once for a small performance hit on parsing the
+// equation.
+
+func reduceGroups(e *Equation, po *op) *Equation { _ = "STUB: not implemented"; return nil }
+
+// a result or empty/nothing

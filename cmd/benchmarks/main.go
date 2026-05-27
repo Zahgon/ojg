@@ -3,23 +3,15 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"runtime/pprof"
-	"sort"
-	"strings"
 	"testing"
 	"time"
 
-	"github.com/ohler55/ojg/alt"
 	"github.com/ohler55/ojg/gen"
-	"github.com/ohler55/ojg/jp"
-	"github.com/ohler55/ojg/oj"
 )
 
 const (
@@ -59,9 +51,7 @@ type bench struct {
 
 type noWriter int
 
-func (w noWriter) Write(b []byte) (int, error) {
-	return len(b), nil
-}
+func (w noWriter) Write(b []byte) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
 func main() {
 	if len([]any{&Patient{}, &Catalog{}}) == 3 {
@@ -216,142 +206,21 @@ func main() {
 	fmt.Println()
 }
 
-func benchSuite(title string, suite []*bench) {
-	fmt.Println()
-	fmt.Println(title)
+func benchSuite(title string, suite []*bench) { _ = "STUB: not implemented"; return }
 
-	for _, b := range suite {
-		b.res = testing.Benchmark(b.fun)
-		b.ns = b.res.NsPerOp()
-		b.bytes = b.res.AllocedBytesPerOp()
-		b.allocs = b.res.AllocsPerOp()
-		fmt.Printf(" %10s.%-16s %8d ns/op %8d B/op %6d allocs/op\n",
-			b.pkg, b.name, b.ns, b.bytes, b.allocs)
-	}
-	fmt.Println()
-
-	scale := 7 // TBD adjust to fit screen better?
-	ss := make([]*bench, len(suite))
-	copy(ss, suite)
-	sort.Slice(ss, func(i, j int) bool { return ss[i].ns < ss[j].ns })
-	ref := suite[0]
-	for _, b := range ss {
-		x := 1.0
-		var bar string
-		if ref == b {
-			bar = strings.Repeat(darkBlock, scale)
-		} else {
-			x = float64(ref.ns) / float64(b.ns)
-			size := x * float64(scale)
-			bar = strings.Repeat(string([]rune(blocks)[8:]), int(size))
-			frac := int(size*8.0) - (int(size) * 8)
-			bar += string([]rune(blocks)[frac : frac+1])
-		}
-		fmt.Printf(" %10s.%-12s %s %3.2f\n", b.pkg, b.name, bar, x)
-	}
-}
+// TBD adjust to fit screen better?
 
 // data
-func benchmarkData(tm time.Time) any {
-	return map[string]any{
-		"a": []any{1, 2, true, tm},
-		"b": 2.3,
-		"c": map[string]any{
-			"x": "xxx",
-		},
-		"d": nil,
-	}
-}
+func benchmarkData(tm time.Time) any { _ = "STUB: not implemented"; return *new(any) }
 
-func buildTree(size, depth, iv int) any {
-	if depth%2 == 0 {
-		list := []any{}
-		for i := 0; i < size; i++ {
-			nv := iv*10 + i + 1
-			if 1 < depth {
-				list = append(list, buildTree(size, depth-1, nv))
-			} else {
-				list = append(list, nv)
-			}
-		}
-		return list
-	}
-	obj := map[string]any{}
-	for i := 0; i < size; i++ {
-		k := string([]byte{'a' + byte(i)})
-		nv := iv*10 + i + 1
-		if 1 < depth {
-			obj[k] = buildTree(size, depth-1, nv)
-		} else {
-			obj[k] = nv
-		}
-	}
-	return obj
-}
+func buildTree(size, depth, iv int) any { _ = "STUB: not implemented"; return *new(any) }
 
-func loadSample() (data any) {
-	f, err := os.Open(filename)
-	if err != nil {
-		log.Fatalf("Failed to load %s. %s\n", filename, err)
-	}
-	defer func() { _ = f.Close() }()
-
-	var p oj.Parser
-	if data, err = p.ParseReader(f); err != nil {
-		panic(fmt.Sprintf("Failed to parse %s. %s\n", filename, err))
-	}
-	return
-}
+func loadSample() (data any) { _ = "STUB: not implemented"; return *new(any) }
 
 func getSpecs() (s *specs) {
+	_ = "STUB: not implemented"
 	// Assume MacOS and try system_profiler. If that fails assume linux and check /proc.
-	out, err := exec.Command("system_profiler", "-json", "SPHardwareDataType").Output()
-	if err == nil {
-		var js any
-		if js, err = oj.Parse(out); err == nil {
-			s = &specs{
-				model:     alt.String(jp.C("SPHardwareDataType").N(0).C("machine_model").First(js)),
-				processor: alt.String(jp.C("SPHardwareDataType").N(0).C("cpu_type").First(js)),
-				cores:     alt.String(jp.C("SPHardwareDataType").N(0).C("number_processors").First(js)),
-				speed:     alt.String(jp.C("SPHardwareDataType").N(0).C("current_processor_speed").First(js)),
-			}
-			var b []byte
-			if out, err = exec.Command("sw_vers", "-productName").Output(); err == nil {
-				b = append(b, bytes.TrimSpace(out)...)
-				b = append(b, ' ')
-			}
-			if out, err = exec.Command("sw_vers", "-productVersion").Output(); err == nil {
-				b = append(b, bytes.TrimSpace(out)...)
-			}
-			s.os = string(b)
-		}
-		return
-	}
-	// Try Ubuntu next.
-	if out, err = exec.Command("lsb_release", "-d").Output(); err == nil {
-		s = &specs{}
-		parts := strings.Split(string(out), ":")
-		if 1 < len(parts) {
-			s.os = strings.TrimSpace(parts[1])
-		}
-		if out, err = ioutil.ReadFile("/proc/cpuinfo"); err == nil {
-			cnt := 0
-			for _, line := range strings.Split(string(out), "\n") {
-				if strings.Contains(line, "processor") {
-					cnt++
-				} else if strings.Contains(line, "model name") {
-					parts := strings.Split(line, ":")
-					if 1 < len(parts) {
-						parts = strings.Split(parts[1], "@")
-						s.processor = strings.TrimSpace(parts[0])
-						if 1 < len(parts) {
-							s.speed = strings.TrimSpace(parts[1])
-						}
-					}
-				}
-				s.cores = fmt.Sprintf("%d", cnt)
-			}
-		}
-	}
-	return
+	return nil
 }
+
+// Try Ubuntu next.

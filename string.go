@@ -2,10 +2,6 @@
 
 package ojg
 
-import (
-	"unicode/utf8"
-)
-
 const hex = "0123456789abcdef"
 
 var (
@@ -39,166 +35,13 @@ var (
 // AppendJSONString appends a JSON encoding of a string to the provided byte
 // slice.
 func AppendJSONString(buf []byte, s string, htmlSafe bool) []byte {
-	buf = append(buf, '"')
-	start := 0
-	skip := 0
-	for i, b := range []byte(s) {
-		if i < skip {
-			continue
-		}
-		c := jMap[b]
-		switch c {
-		case 'o':
-			continue
-		case '.':
-			if start < i {
-				buf = append(buf, s[start:i]...)
-			}
-			buf = append(buf, `\u00`...)
-			buf = append(buf, hex[(b>>4)&0x0f])
-			buf = append(buf, hex[b&0x0f])
-			start = i + 1
-		case 'h':
-			if htmlSafe {
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u00`...)
-				buf = append(buf, hex[(b>>4)&0x0f])
-				buf = append(buf, hex[b&0x0f])
-				start = i + 1
-			}
-		case '8':
-			r, cnt := utf8.DecodeRuneInString(s[i:])
-			switch r {
-			case '\u2028':
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u2028`...)
-				start = i + cnt
-				skip = start
-			case '\u2029':
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u2029`...)
-				start = i + cnt
-				skip = start
-			case utf8.RuneError:
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\ufffd`...)
-				start = i + cnt
-				skip = start
-			default:
-				skip = i + cnt
-			}
-		default:
-			if start < i {
-				buf = append(buf, s[start:i]...)
-			}
-			buf = append(buf, '\\')
-			buf = append(buf, c)
-			start = i + 1
-		}
-	}
-	if start < len(s) {
-		buf = append(buf, s[start:]...)
-	}
-	return append(buf, '"')
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AppendSENString appends a SEN encoding of a string to the provided byte
 // slice.
 func AppendSENString(buf []byte, s string, htmlSafe bool) []byte {
-	if len(s) == 0 {
-		return append(buf, `""`...)
-	}
-	b0 := len(buf)
-	m := senMap[s[0]]
-	quote := maxTokenLen < len(s) || (m != 'o' && m != '8' && !(!htmlSafe && m == 'h'))
-	buf = append(buf, '"')
-	start := 0
-	skip := 0
-	for i, b := range []byte(s) {
-		if i < skip {
-			continue
-		}
-		c := senMap[b]
-		switch c {
-		case 'o', '0':
-			continue
-		case 'x':
-			quote = true
-		case '.':
-			quote = true
-			if start < i {
-				buf = append(buf, s[start:i]...)
-			}
-			buf = append(buf, `\u00`...)
-			buf = append(buf, hex[(b>>4)&0x0f])
-			buf = append(buf, hex[b&0x0f])
-			start = i + 1
-		case 'h':
-			if htmlSafe {
-				quote = true
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u00`...)
-				buf = append(buf, hex[(b>>4)&0x0f])
-				buf = append(buf, hex[b&0x0f])
-				start = i + 1
-			}
-		case '8':
-			r, cnt := utf8.DecodeRuneInString(s[i:])
-			switch r {
-			case '\u2028':
-				quote = true
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u2028`...)
-				start = i + cnt
-				skip = start
-			case '\u2029':
-				quote = true
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\u2029`...)
-				start = i + cnt
-				skip = start
-			case utf8.RuneError:
-				quote = true
-				if start < i {
-					buf = append(buf, s[start:i]...)
-				}
-				buf = append(buf, `\ufffd`...)
-				start = i + cnt
-				skip = start
-			default:
-				skip = i + cnt
-			}
-		default:
-			if start < i {
-				buf = append(buf, s[start:i]...)
-			}
-			buf = append(buf, '\\')
-			buf = append(buf, c)
-			start = i + 1
-			quote = true
-		}
-	}
-	if start < len(s) {
-		buf = append(buf, s[start:]...)
-	}
-	if quote {
-		return append(buf, '"')
-	}
-	copy(buf[b0:], buf[b0+1:])
-
-	return buf[:len(buf)-1]
+	_ = "STUB: not implemented"
+	return nil
 }
